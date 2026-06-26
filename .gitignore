@@ -3,8 +3,7 @@ node_modules/
 frontend/node_modules/
 backend/node_modules/
 
-# Build output
-frontend/dist/
+# Build output (dist được commit để deploy trên Render)
 frontend/dist-ssr/
 
 # Database (local only — Render dùng disk)
