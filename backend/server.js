@@ -42,8 +42,8 @@ app.get('/api/health', (_req, res) => res.json({ status: 'ok', time: new Date().
 const DIST = path.join(__dirname, '../frontend/dist')
 if (fs.existsSync(DIST)) {
   app.use(express.static(DIST))
-  // SPA fallback — tất cả route không phải /api đều trả về index.html
-  app.get('*', (_req, res) => res.sendFile(path.join(DIST, 'index.html')))
+  // SPA fallback — Express 5 dùng app.use thay vì app.get('*')
+  app.use((_req, res) => res.sendFile(path.join(DIST, 'index.html')))
 } else {
   app.use((_req, res) => res.status(404).json({ error: 'Route not found' }))
 }
