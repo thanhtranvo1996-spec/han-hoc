@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&family=Inter:wght@400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --red: #C0392B;
+  --red-dark: #96281B;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #FFFDF7;
+  color: #1a1a1a;
+}
+
+.font-hanzi {
+  font-family: 'Noto Serif SC', serif;
+}

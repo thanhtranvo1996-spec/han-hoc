@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: han-hoc-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: CLAUDE_API_KEY
+        sync: false          # điền tay trong Render dashboard
+      - key: FRONTEND_URL
+        sync: false          # điền URL Vercel sau khi deploy frontend
+      - key: DB_PATH
+        value: /data/han_hoc.db
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1

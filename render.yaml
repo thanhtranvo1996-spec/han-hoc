@@ -1,0 +1,39 @@
+services:
+
+  # ── BACKEND (Node.js Web Service) ─────────────────────────────────────────
+  - type: web
+    name: han-hoc-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node seed-grammar.js && node server.js
+    envVars:
+      - key: PORT
+        value: 3001
+      - key: NODE_ENV
+        value: production
+      - key: DB_PATH
+        value: /data/han_hoc.db
+      - key: GROQ_API_KEY
+        sync: false        # → điền tay trong Render dashboard (lấy miễn phí tại console.groq.com)
+      - key: FRONTEND_URL
+        sync: false        # → điền sau khi có URL frontend
+    disk:
+      name: sqlite-data
+      mountPath: /data
+      sizeGB: 1
+
+  # ── FRONTEND (Static Site) ─────────────────────────────────────────────────
+  - type: web
+    name: han-hoc-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false        # → điền URL backend sau khi backend đã deploy
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
