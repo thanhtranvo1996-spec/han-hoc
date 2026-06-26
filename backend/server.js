@@ -1,6 +1,8 @@
 require('dotenv').config()
 const express = require('express')
 const cors    = require('cors')
+const path    = require('path')
+const fs      = require('fs')
 
 const vocabularyRoutes    = require('./routes/vocabulary')
 const progressRoutes      = require('./routes/progress')
@@ -36,24 +38,14 @@ app.use('/api/stats',          statsRoutes)
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }))
 
-app.get('/', (_req, res) => res.send(`
-  <html><head><meta charset="utf-8"><title>Hán Học API</title>
-  <style>body{font-family:sans-serif;max-width:640px;margin:40px auto;padding:0 20px}h1{color:#C0392B}a{color:#C0392B}</style></head>
-  <body><h1>🏮 Hán Học API</h1><ul>
-    <li><a href="/api/health">/api/health</a></li>
-    <li><a href="/api/vocabulary/1">/api/vocabulary/1</a></li>
-    <li><a href="/api/vocabulary/due-today">/api/vocabulary/due-today</a></li>
-    <li><a href="/api/grammar/1">/api/grammar/1</a></li>
-    <li>/api/ai/explain — POST</li>
-    <li>/api/ai/grade — POST</li>
-    <li>/api/ai/chat — POST</li>
-    <li>/api/ai/analyze-message — POST</li>
-    <li><a href="/api/stats/overview">/api/stats/overview</a></li>
-    <li><a href="/api/writing-history">/api/writing-history</a></li>
-    <li><a href="/api/chat-history">/api/chat-history</a></li>
-  </ul></body></html>
-`))
-
-app.use((_req, res) => res.status(404).json({ error: 'Route not found' }))
+// Serve React frontend (production build)
+const DIST = path.join(__dirname, '../frontend/dist')
+if (fs.existsSync(DIST)) {
+  app.use(express.static(DIST))
+  // SPA fallback — tất cả route không phải /api đều trả về index.html
+  app.get('*', (_req, res) => res.sendFile(path.join(DIST, 'index.html')))
+} else {
+  app.use((_req, res) => res.status(404).json({ error: 'Route not found' }))
+}
 
 app.listen(PORT, () => console.log(`🏮 Hán Học API → http://localhost:${PORT}`))
