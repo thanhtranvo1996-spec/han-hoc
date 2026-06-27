@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { saveProgress } from '../api/vocabulary'
 import WordDetail from '../components/WordDetail'
 
-const BASE = 'http://localhost:3001/api'
+import { API as BASE } from '../api/config'
 
 async function fetchQuiz(level, mode, limit) {
   const res = await fetch(`${BASE}/vocabulary/quiz?level=${level}&mode=${mode}&limit=${limit}`)

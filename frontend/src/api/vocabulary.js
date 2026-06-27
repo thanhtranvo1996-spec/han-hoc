@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:3001/api'
+import { API as BASE } from './config'
 
 export async function getAllVocabulary({ limit = 100, offset = 0 } = {}) {
   const res = await fetch(`${BASE}/vocabulary?limit=${limit}&offset=${offset}`)

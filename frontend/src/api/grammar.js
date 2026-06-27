@@ -1,4 +1,4 @@
-const BASE = 'http://localhost:3001/api'
+import { API as BASE } from './config'
 
 export async function getGrammarByLevel(level) {
   const res = await fetch(`${BASE}/grammar/${level}`)

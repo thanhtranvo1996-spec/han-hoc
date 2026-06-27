@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
-const BASE = 'http://localhost:3001/api'
+import { API as BASE } from '../api/config'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 let _aud = null
