@@ -21,22 +21,23 @@ const allowedOrigins = [
   process.env.FRONTEND_URL,
 ].filter(Boolean)
 
-app.use(cors({ origin: (origin, cb) => {
+const apiCors = cors({ origin: (origin, cb) => {
   if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
   cb(new Error('Not allowed by CORS'))
-}}))
+}})
+
 app.use(express.json())
 
-app.use('/api/vocabulary',     vocabularyRoutes)
-app.use('/api/progress',       progressRoutes)
-app.use('/api/grammar',        grammarRoutes)
-app.use('/api/tts',            ttsRoutes)
-app.use('/api/ai',             aiRoutes)
-app.use('/api/writing-history', writingHistoryRoutes)
-app.use('/api/chat-history',   chatHistoryRoutes)
-app.use('/api/stats',          statsRoutes)
+app.use('/api/vocabulary',     apiCors, vocabularyRoutes)
+app.use('/api/progress',       apiCors, progressRoutes)
+app.use('/api/grammar',        apiCors, grammarRoutes)
+app.use('/api/tts',            apiCors, ttsRoutes)
+app.use('/api/ai',             apiCors, aiRoutes)
+app.use('/api/writing-history', apiCors, writingHistoryRoutes)
+app.use('/api/chat-history',   apiCors, chatHistoryRoutes)
+app.use('/api/stats',          apiCors, statsRoutes)
 
-app.get('/api/health', (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }))
+app.get('/api/health', apiCors, (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }))
 
 // Serve React frontend (production build)
 const DIST = path.join(__dirname, '../frontend/dist')
