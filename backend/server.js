@@ -22,7 +22,9 @@ const allowedOrigins = [
 ].filter(Boolean)
 
 const apiCors = cors({ origin: (origin, cb) => {
-  if (!origin || allowedOrigins.includes(origin)) return cb(null, true)
+  if (!origin) return cb(null, true)                          // server-to-server
+  if (allowedOrigins.includes(origin)) return cb(null, true) // dev localhost
+  if (origin.endsWith('.onrender.com')) return cb(null, true) // production
   cb(new Error('Not allowed by CORS'))
 }})
 

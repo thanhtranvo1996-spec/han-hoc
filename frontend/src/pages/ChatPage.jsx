@@ -188,7 +188,7 @@ export default function ChatPage() {
         playAudio(data.reply_chinese)
         collectVocab(data.reply_chinese)
       })
-      .catch(e => { if (e.name !== 'AbortError') setAiError('Không kết nối được AI. Kiểm tra CLAUDE_API_KEY.') })
+      .catch(e => { if (e.name !== 'AbortError') setAiError('Không kết nối được AI. Thử lại sau.') })
       .finally(() => { if (!signal.aborted) setTyping(false) })
 
     return () => abortRef.current?.abort()
