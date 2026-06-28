@@ -67,15 +67,15 @@ const CSS = `
 
 export default function HomePage() {
   return (
-    <main style={{ background:'#f4f6f9', minHeight:'100vh' }} className="px-4 pb-10">
+    <main style={{ background:'linear-gradient(150deg,#8B1A10 0%,#C0392B 55%,#D4591A 100%)', minHeight:'100vh' }} className="px-4 pb-10">
       <style>{CSS}</style>
 
       <div className="max-w-2xl mx-auto pt-8 pb-6">
         <div className="font-hanzi select-none leading-none"
-             style={{ fontSize:72, color:'rgba(192,57,43,0.15)' }}>漢</div>
+             style={{ fontSize:72, color:'rgba(255,255,255,0.12)' }}>漢</div>
         <h1 className="font-hanzi font-black"
-            style={{ fontSize:30, marginTop:-20, color:'#C0392B' }}>漢學 Hán Học</h1>
-        <p style={{ color:'#888', fontSize:13, marginTop:6 }}>Chinh phục HSK từ con số 0</p>
+            style={{ fontSize:30, marginTop:-20, color:'#fff' }}>漢學 Hán Học</h1>
+        <p style={{ color:'rgba(255,255,255,0.65)', fontSize:13, marginTop:6 }}>Chinh phục HSK từ con số 0</p>
       </div>
 
       <div className="hp-grid max-w-2xl mx-auto">
