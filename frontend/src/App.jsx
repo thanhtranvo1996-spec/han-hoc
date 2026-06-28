@@ -9,6 +9,7 @@ import ChatPage from './pages/ChatPage'
 import VocabListPage from './pages/VocabListPage'
 import GrammarPage from './pages/GrammarPage'
 import DashboardPage from './pages/DashboardPage'
+import TypingPage from './pages/TypingPage'
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/chat"      element={<ChatPage />} />
         <Route path="/vocab"     element={<VocabListPage />} />
         <Route path="/grammar"   element={<GrammarPage />} />
+        <Route path="/typing"    element={<TypingPage />} />
       </Routes>
     </BrowserRouter>
   )

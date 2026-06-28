@@ -37,4 +37,34 @@ router.get('/', (req, res) => {
   })
 })
 
+// POST /api/tts/sentence — trả về base64 audio để phát trực tiếp
+router.post('/sentence', (req, res) => {
+  const text = (req.body?.text || '').trim()
+  if (!text) return res.status(400).json({ error: '"text" is required' })
+  if (text.length > 500) return res.status(400).json({ error: 'Text too long (max 500 chars)' })
+
+  const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=zh-CN&client=tw-ob` +
+              `&q=${encodeURIComponent(text)}&ttsspeed=1`
+
+  https.get(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0 Safari/537.36',
+      'Referer':    'https://translate.google.com/',
+    },
+  }, (upstream) => {
+    if (upstream.statusCode !== 200) {
+      return res.status(502).json({ error: `Google TTS returned ${upstream.statusCode}` })
+    }
+    const chunks = []
+    upstream.on('data', chunk => chunks.push(chunk))
+    upstream.on('end', () => {
+      const buf = Buffer.concat(chunks)
+      res.json({ audioBase64: buf.toString('base64') })
+    })
+    upstream.on('error', err => res.status(502).json({ error: err.message }))
+  }).on('error', (err) => {
+    res.status(502).json({ error: `TTS request failed: ${err.message}` })
+  })
+})
+
 module.exports = router

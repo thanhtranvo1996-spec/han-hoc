@@ -9,6 +9,7 @@ const links = [
   { to: '/writing',   label: 'Đặt câu' },
   { to: '/chat',      label: 'Chat AI' },
   { to: '/vocab',     label: 'Từ vựng' },
+  { to: '/typing',    label: 'Luyện gõ' },
   { to: '/grammar',   label: 'Ngữ pháp' },
 ]
 

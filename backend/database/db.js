@@ -62,6 +62,19 @@ db.exec(`
   );
 `)
 
+// Bảng câu luyện gõ
+db.exec(`
+  CREATE TABLE IF NOT EXISTS typing_sentences (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    chinese     TEXT    NOT NULL,
+    vietnamese  TEXT    NOT NULL,
+    pinyin      TEXT,
+    source      TEXT    NOT NULL DEFAULT 'claude',
+    hsk_level   INTEGER NOT NULL,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
+`)
+
 // Thêm cột SRS vào progress nếu chưa có
 const progressCols = db.prepare('PRAGMA table_info(progress)').all().map(c => c.name)
 if (!progressCols.includes('next_review'))  db.exec('ALTER TABLE progress ADD COLUMN next_review TEXT')
