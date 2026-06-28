@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import HomePage from './pages/HomePage'
 import FlashcardPage from './pages/FlashcardPage'
@@ -11,10 +11,11 @@ import GrammarPage from './pages/GrammarPage'
 import DashboardPage from './pages/DashboardPage'
 import TypingPage from './pages/TypingPage'
 
-export default function App() {
+function Layout() {
+  const { pathname } = useLocation()
   return (
-    <BrowserRouter>
-      <Navbar />
+    <>
+      {pathname !== '/' && <Navbar />}
       <Routes>
         <Route path="/"          element={<HomePage />} />
         <Route path="/dashboard" element={<DashboardPage />} />
@@ -27,6 +28,14 @@ export default function App() {
         <Route path="/grammar"   element={<GrammarPage />} />
         <Route path="/typing"    element={<TypingPage />} />
       </Routes>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Layout />
     </BrowserRouter>
   )
 }
