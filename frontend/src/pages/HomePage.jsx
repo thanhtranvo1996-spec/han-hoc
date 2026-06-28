@@ -1,103 +1,122 @@
 import { Link } from 'react-router-dom'
 
 const TILES = [
-  { to:'/dashboard', fa:'fa-chart-line',      label:'Dashboard',   sub:'Tiến độ học tập', bg:'#1565C0', cls:'tile-wide', delay:0.00 },
-  { to:'/chat',      fa:'fa-robot',           label:'Chat AI',     sub:'Trợ lý AI',       bg:'#1b2631', cls:'',          delay:0.08 },
-  { to:'/flashcard', fa:'fa-layer-group',     label:'Flashcard',   sub:'Ôn từ vựng',      bg:'#B71C1C', cls:'',          delay:0.12 },
-  { to:'/quiz',      fa:'fa-circle-question', label:'Quiz',        sub:'Kiểm tra',        bg:'#6A1B9A', cls:'',          delay:0.16 },
-  { to:'/listening', fa:'fa-headphones',      label:'Luyện nghe',  sub:'Nghe & hiểu',     bg:'#00695C', cls:'',          delay:0.20 },
-  { to:'/writing',   fa:'fa-pen',             label:'Đặt câu',     sub:'Luyện viết',      bg:'#E65100', cls:'',          delay:0.14 },
-  { to:'/vocab',     fa:'fa-book-open',       label:'Từ vựng',     sub:'Tổng hợp từ',     bg:'#2E7D32', cls:'',          delay:0.18 },
-  { to:'/typing',    fa:'fa-keyboard',        label:'Luyện gõ',    sub:'Gõ chữ Hán',      bg:'#4527A0', cls:'',          delay:0.22 },
-  { to:'/grammar',   fa:'fa-graduation-cap',  label:'Ngữ pháp',    sub:'HSK 1–6',         bg:'#006064', cls:'tile-full',  delay:0.26 },
+  { to:'/dashboard', fa:'fa-chart-line',      hz:'学', label:'Dashboard',  sub:'Tiến độ học',  bg:'linear-gradient(145deg,#1565C0,#1E88E5)', delay:0.00 },
+  { to:'/flashcard', fa:'fa-layer-group',     hz:'记', label:'Flashcard',  sub:'Ôn từ vựng',  bg:'linear-gradient(145deg,#C62828,#E53935)', delay:0.06 },
+  { to:'/quiz',      fa:'fa-circle-question', hz:'考', label:'Quiz',       sub:'Kiểm tra',    bg:'linear-gradient(145deg,#6A1B9A,#9C27B0)', delay:0.10 },
+  { to:'/listening', fa:'fa-headphones',      hz:'听', label:'Luyện nghe', sub:'Nghe & hiểu', bg:'linear-gradient(145deg,#00695C,#009688)', delay:0.14 },
+  { to:'/writing',   fa:'fa-pen',             hz:'写', label:'Đặt câu',    sub:'Luyện viết',  bg:'linear-gradient(145deg,#BF360C,#F4511E)', delay:0.08 },
+  { to:'/chat',      fa:'fa-robot',           hz:'问', label:'Chat AI',    sub:'Trợ lý AI',   bg:'linear-gradient(145deg,#283593,#3949AB)', delay:0.18 },
+  { to:'/vocab',     fa:'fa-book-open',       hz:'词', label:'Từ vựng',    sub:'Tổng hợp từ', bg:'linear-gradient(145deg,#2E7D32,#43A047)', delay:0.12 },
+  { to:'/typing',    fa:'fa-keyboard',        hz:'打', label:'Luyện gõ',   sub:'Gõ Hán tự',   bg:'linear-gradient(145deg,#4527A0,#7E57C2)', delay:0.16 },
+  { to:'/grammar',   fa:'fa-graduation-cap',  hz:'法', label:'Ngữ pháp',   sub:'HSK 1–6',     bg:'linear-gradient(145deg,#004D40,#00897B)', delay:0.20 },
 ]
 
 const CSS = `
 @keyframes tileIn {
-  from { opacity:0; transform:scale(0.82) translateY(18px); }
-  to   { opacity:1; transform:scale(1)    translateY(0); }
+  from { opacity:0; transform:translateY(28px) scale(0.86); }
+  to   { opacity:1; transform:translateY(0)    scale(1); }
 }
 @keyframes shine {
-  0%, 33%   { transform:translateX(-180%); }
-  66%, 100% { transform:translateX(180%); }
+  0%, 33%   { transform:translateX(-160%); }
+  66%, 100% { transform:translateX(160%); }
 }
 .hp-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
-.tile-full { grid-column: span 2; }
-@media (min-width: 640px) {
-  .hp-grid   { grid-template-columns: repeat(3, 1fr); }
-  .tile-wide { grid-column: span 2; }
-  .tile-full { grid-column: span 3; }
+@media (min-width: 600px) {
+  .hp-grid { grid-template-columns: repeat(3, 1fr); }
 }
 .han-tile {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  height: 132px;
+  border-radius: 14px;
+  height: 148px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 14px 16px;
+  padding: 16px 18px;
   text-decoration: none;
-  animation: tileIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-  transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+  animation: tileIn 0.42s cubic-bezier(0.25,0.46,0.45,0.94) both;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
 }
-@media (min-width: 640px) { .han-tile { height: 150px; } }
 .han-tile:hover {
-  transform: translateY(-4px) scale(1.025);
-  filter: brightness(1.12);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
-  z-index: 1;
+  transform: translateY(-6px) scale(1.025);
+  box-shadow: 0 16px 36px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .tile-shine {
   position: absolute;
   inset: 0;
-  background: linear-gradient(110deg, transparent 38%, rgba(255,255,255,0.09) 50%, transparent 62%);
-  animation: shine 5s ease-in-out infinite;
+  background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.07) 50%, transparent 65%);
+  animation: shine 6s ease-in-out infinite;
   pointer-events: none;
 }
-.tile-bg-icon {
+.tile-hz {
   position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 72px;
-  color: rgba(255,255,255,0.07);
+  bottom: -10px;
+  right: 6px;
+  font-size: 100px;
+  color: rgba(255,255,255,0.09);
   pointer-events: none;
   line-height: 1;
+  font-weight: 900;
+  user-select: none;
 }
-.tile-fa   { font-size:19px; color:rgba(255,255,255,0.93); margin-bottom:7px; display:block; }
-.tile-name { color:#fff; font-size:14px; font-weight:700; line-height:1.2; letter-spacing:0.01em; }
-.tile-sub  { color:rgba(255,255,255,0.5); font-size:10px; margin-top:3px; letter-spacing:0.02em; text-transform:uppercase; }
+.tile-fa {
+  font-size: 24px;
+  color: rgba(255,255,255,0.95);
+  margin-bottom: 10px;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+.tile-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+.tile-sub {
+  color: rgba(255,255,255,0.58);
+  font-size: 11px;
+  margin-top: 3px;
+}
 `
 
 export default function HomePage() {
   return (
-    <main style={{ background:'linear-gradient(150deg,#8B1A10 0%,#C0392B 55%,#D4591A 100%)', minHeight:'100vh' }} className="px-4 pb-10">
+    <main style={{ background:'linear-gradient(150deg,#8B1A10 0%,#C0392B 55%,#D4591A 100%)', minHeight:'100vh' }}
+          className="pb-12">
       <style>{CSS}</style>
 
-      <div className="max-w-2xl mx-auto pt-8 pb-6">
-        <div className="font-hanzi select-none leading-none"
-             style={{ fontSize:72, color:'rgba(255,255,255,0.12)' }}>漢</div>
+      {/* Header */}
+      <div style={{ textAlign:'center', padding:'44px 24px 32px' }}>
+        <div className="font-hanzi select-none"
+             style={{ fontSize:88, color:'rgba(255,255,255,0.09)', lineHeight:1, marginBottom:-28 }}>漢</div>
         <h1 className="font-hanzi font-black"
-            style={{ fontSize:30, marginTop:-20, color:'#fff' }}>漢學 Hán Học</h1>
-        <p style={{ color:'rgba(255,255,255,0.65)', fontSize:13, marginTop:6 }}>Chinh phục HSK từ con số 0</p>
+            style={{ fontSize:34, color:'#fff', textShadow:'0 2px 10px rgba(0,0,0,0.25)', letterSpacing:'0.02em' }}>
+          漢學 Hán Học
+        </h1>
+        <p style={{ color:'rgba(255,255,255,0.55)', fontSize:13, marginTop:8, letterSpacing:'0.04em' }}>
+          CHINH PHỤC HSK TỪ CON SỐ 0
+        </p>
       </div>
 
-      <div className="hp-grid max-w-2xl mx-auto">
+      {/* Tile grid */}
+      <div className="hp-grid" style={{ maxWidth:680, margin:'0 auto', padding:'0 16px' }}>
         {TILES.map((t, i) => (
           <Link
             key={t.to}
             to={t.to}
-            className={`han-tile ${t.cls}`}
-            style={{ backgroundColor:t.bg, animationDelay:`${t.delay}s` }}
+            className="han-tile"
+            style={{ background:t.bg, animationDelay:`${t.delay}s` }}
           >
-            <div className="tile-shine" style={{ animationDelay:`${i * 0.6}s` }} />
-            <i className={`fa-solid ${t.fa} tile-bg-icon`} aria-hidden="true" />
+            <div className="tile-shine" style={{ animationDelay:`${i * 0.65}s` }} />
+            <span className="tile-hz font-hanzi" aria-hidden="true">{t.hz}</span>
             <i className={`fa-solid ${t.fa} tile-fa`} aria-hidden="true" />
             <span className="tile-name">{t.label}</span>
             <span className="tile-sub">{t.sub}</span>
