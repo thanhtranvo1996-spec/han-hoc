@@ -5,7 +5,10 @@ const db        = require('../database/db')
 
 const router = express.Router()
 
-// ─── Tatoeba ─────────────────────────────────────────────────────────────────
+// Phồn thể detector — bất kỳ ký tự nào sau đây → câu phồn thể, bỏ qua
+const TRAD_RE = /[學語愛國書說會來電話時體動點實問聲長頭發關開門還進從後這裡錢萬對歲當運設認讀寫聽講習圖與員歸馬業農應廣帶傳際號機樣辦覺決選擇讓繼續幾歡聯諸風遠報場層記張約區規訓練護標態責製藝龍銀誰號緊強緊總維顯]/
+
+// ─── Tatoeba (chỉ giữ câu giản thể) ─────────────────────────────────────────
 function fetchTatoeba() {
   return new Promise((resolve) => {
     const url = 'https://tatoeba.org/en/api_v0/search' +
@@ -20,6 +23,7 @@ function fetchTatoeba() {
           for (const item of (json.results || [])) {
             const chinese = (item.text || '').trim()
             if (!chinese) continue
+            if (TRAD_RE.test(chinese)) continue  // bỏ câu phồn thể
             let vietnamese = ''
             for (const group of (item.translations || [])) {
               for (const t of (group || [])) {
@@ -59,7 +63,7 @@ async function fetchClaude(level) {
       messages: [{
         role:    'user',
         content: `Tạo 10 câu tiếng Trung phù hợp trình độ HSK ${level}.
-Yêu cầu: câu ngắn 5–15 chữ, tự nhiên, đời thường.
+Yêu cầu: câu ngắn 5–15 chữ, tự nhiên, đời thường. Chỉ dùng chữ GIẢN THỂ (简体字), tuyệt đối không dùng phồn thể.
 Trả về JSON array, không giải thích thêm:
 [{"chinese":"...","vietnamese":"...","pinyin":"..."}]`,
       }],
@@ -81,6 +85,23 @@ Trả về JSON array, không giải thích thêm:
     console.error('[typing] Claude fetch error:', e.message)
     return []
   }
+}
+
+// Xóa câu phồn thể đã cache (chạy 1 lần khi module load)
+try {
+  const del = db.prepare(
+    "DELETE FROM typing_sentences WHERE chinese REGEXP ?"
+  )
+  // better-sqlite3 không có REGEXP built-in, dùng cách khác
+  const rows = db.prepare('SELECT id, chinese FROM typing_sentences').all()
+  const badIds = rows.filter(r => TRAD_RE.test(r.chinese)).map(r => r.id)
+  if (badIds.length > 0) {
+    const placeholders = badIds.map(() => '?').join(',')
+    db.prepare(`DELETE FROM typing_sentences WHERE id IN (${placeholders})`).run(...badIds)
+    console.log(`[typing] Đã xóa ${badIds.length} câu phồn thể khỏi cache`)
+  }
+} catch (e) {
+  console.error('[typing] Cleanup error:', e.message)
 }
 
 // ─── GET /api/typing-sentences?level=1 ───────────────────────────────────────
