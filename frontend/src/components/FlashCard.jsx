@@ -1,22 +1,11 @@
 import { useState, useRef } from 'react'
-
-function speak(text) {
-  if (!window.speechSynthesis) return
-  window.speechSynthesis.cancel()
-  const utt = new SpeechSynthesisUtterance(text)
-  utt.lang = 'zh-CN'
-  utt.rate = 0.85
-  // Chọn giọng tiếng Trung nếu có
-  const voices = window.speechSynthesis.getVoices()
-  const zhVoice = voices.find(v => v.lang.startsWith('zh'))
-  if (zhVoice) utt.voice = zhVoice
-  window.speechSynthesis.speak(utt)
-}
+import { API } from '../api/config'
 
 export default function FlashCard({ word, onKnow, onUnknow }) {
   const [flipped, setFlipped]   = useState(false)
   const [playing, setPlaying]   = useState(false)
-  const cardRef = useRef(null)
+  const audioRef = useRef(null)
+  const cardRef  = useRef(null)
 
   const pinyin = (word.pinyin || '').replace(/^\/|\/$/g, '').trim()
 
@@ -24,11 +13,24 @@ export default function FlashCard({ word, onKnow, onUnknow }) {
     setFlipped(f => !f)
   }
 
-  function handleSpeak(e) {
+  async function handleSpeak(e) {
     e.stopPropagation()
+    if (playing) return
+    // Dùng backend TTS (Google Translate) thay Web Speech API
+    // → hoạt động đồng nhất trên Android, iOS, desktop
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null }
     setPlaying(true)
-    speak(word.chinese)
-    setTimeout(() => setPlaying(false), 1200)
+    try {
+      const audio = new Audio(
+        `${API}/tts?text=${encodeURIComponent(word.chinese)}&speed=normal`
+      )
+      audioRef.current = audio
+      audio.onended = () => setPlaying(false)
+      audio.onerror = () => setPlaying(false)
+      await audio.play()
+    } catch {
+      setPlaying(false)
+    }
   }
 
   function handleKnow(e) {
