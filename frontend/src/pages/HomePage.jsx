@@ -14,55 +14,65 @@ const TILES = [
 
 const CSS = `
 @keyframes tileIn {
-  from { opacity:0; transform:scale(0.75) translateY(22px); }
+  from { opacity:0; transform:scale(0.82) translateY(18px); }
   to   { opacity:1; transform:scale(1)    translateY(0); }
 }
 @keyframes shine {
-  0%, 35%   { transform:translateX(-200%); }
-  65%, 100% { transform:translateX(200%); }
+  0%, 33%   { transform:translateX(-180%); }
+  66%, 100% { transform:translateX(180%); }
 }
 .hp-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
+  gap: 10px;
 }
-.tile-full { grid-column: span 2; aspect-ratio: 2/1; }
+.tile-full { grid-column: span 2; }
 @media (min-width: 640px) {
   .hp-grid   { grid-template-columns: repeat(3, 1fr); }
-  .tile-wide { grid-column: span 2; aspect-ratio: 2/1; }
-  .tile-full { grid-column: span 3; aspect-ratio: 3/1; }
+  .tile-wide { grid-column: span 2; }
+  .tile-full { grid-column: span 3; }
 }
 .han-tile {
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
-  aspect-ratio: 1/1;
+  border-radius: 8px;
+  height: 132px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 14px;
+  align-items: flex-start;
+  padding: 14px 16px;
   text-decoration: none;
-  animation: tileIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
-  transition: transform 0.18s ease, filter 0.18s ease, box-shadow 0.18s ease;
+  animation: tileIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+  transition: transform 0.16s ease, filter 0.16s ease, box-shadow 0.16s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
 }
+@media (min-width: 640px) { .han-tile { height: 150px; } }
 .han-tile:hover {
-  transform: translateY(-5px) scale(1.03);
-  filter: brightness(1.18);
-  box-shadow: 0 16px 40px rgba(0,0,0,0.55);
+  transform: translateY(-4px) scale(1.025);
+  filter: brightness(1.12);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
   z-index: 1;
 }
 .tile-shine {
   position: absolute;
   inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.13) 50%, transparent 60%);
+  background: linear-gradient(110deg, transparent 38%, rgba(255,255,255,0.09) 50%, transparent 62%);
   animation: shine 5s ease-in-out infinite;
   pointer-events: none;
 }
-.tile-fa   { font-size:28px; color:rgba(255,255,255,0.9); margin-bottom:8px; display:block; }
-.tile-wide .tile-fa,
-.tile-full .tile-fa { font-size:34px; }
-.tile-name { color:#fff; font-size:14px; font-weight:600; line-height:1.2; }
-.tile-sub  { color:rgba(255,255,255,0.55); font-size:10px; margin-top:3px; }
+.tile-bg-icon {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 72px;
+  color: rgba(255,255,255,0.07);
+  pointer-events: none;
+  line-height: 1;
+}
+.tile-fa   { font-size:19px; color:rgba(255,255,255,0.93); margin-bottom:7px; display:block; }
+.tile-name { color:#fff; font-size:14px; font-weight:700; line-height:1.2; letter-spacing:0.01em; }
+.tile-sub  { color:rgba(255,255,255,0.5); font-size:10px; margin-top:3px; letter-spacing:0.02em; text-transform:uppercase; }
 `
 
 export default function HomePage() {
@@ -87,6 +97,7 @@ export default function HomePage() {
             style={{ backgroundColor:t.bg, animationDelay:`${t.delay}s` }}
           >
             <div className="tile-shine" style={{ animationDelay:`${i * 0.6}s` }} />
+            <i className={`fa-solid ${t.fa} tile-bg-icon`} aria-hidden="true" />
             <i className={`fa-solid ${t.fa} tile-fa`} aria-hidden="true" />
             <span className="tile-name">{t.label}</span>
             <span className="tile-sub">{t.sub}</span>
