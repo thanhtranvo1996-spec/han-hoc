@@ -89,10 +89,6 @@ Trả về JSON array, không giải thích thêm:
 
 // Xóa câu phồn thể đã cache (chạy 1 lần khi module load)
 try {
-  const del = db.prepare(
-    "DELETE FROM typing_sentences WHERE chinese REGEXP ?"
-  )
-  // better-sqlite3 không có REGEXP built-in, dùng cách khác
   const rows = db.prepare('SELECT id, chinese FROM typing_sentences').all()
   const badIds = rows.filter(r => TRAD_RE.test(r.chinese)).map(r => r.id)
   if (badIds.length > 0) {
