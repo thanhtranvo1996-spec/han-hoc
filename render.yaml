@@ -5,8 +5,8 @@ services:
     name: han-hoc-backend
     runtime: node
     rootDir: backend
-    buildCommand: npm install
-    startCommand: node seed-grammar.js && node server.js
+    buildCommand: npm install && cd ../frontend && npm install && npm run build
+    startCommand: node seed-vocabulary.js && node seed-grammar.js && node server.js
     envVars:
       - key: PORT
         value: 3001
