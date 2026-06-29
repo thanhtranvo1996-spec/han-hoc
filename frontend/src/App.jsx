@@ -10,6 +10,7 @@ import VocabListPage from './pages/VocabListPage'
 import GrammarPage from './pages/GrammarPage'
 import DashboardPage from './pages/DashboardPage'
 import TypingPage from './pages/TypingPage'
+import TopicPage  from './pages/TopicPage'
 
 // Nút floating: về trang chủ + cuộn lên
 function FloatingNav() {
@@ -63,6 +64,7 @@ function Layout() {
         <Route path="/vocab"     element={<VocabListPage />} />
         <Route path="/grammar"   element={<GrammarPage />} />
         <Route path="/typing"    element={<TypingPage />} />
+        <Route path="/topic"     element={<TopicPage />} />
       </Routes>
       <FloatingNav />
     </>

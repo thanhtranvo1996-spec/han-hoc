@@ -13,6 +13,7 @@ const typingSentencesRoutes = require('./routes/typing-sentences')
 const writingHistoryRoutes  = require('./routes/writing-history')
 const chatHistoryRoutes   = require('./routes/chat-history')
 const statsRoutes         = require('./routes/stats')
+const topicsRoutes        = require('./routes/topics')
 
 const app  = express()
 const PORT = process.env.PORT || 3001
@@ -40,6 +41,7 @@ app.use('/api/typing-sentences', apiCors, typingSentencesRoutes)
 app.use('/api/writing-history',  apiCors, writingHistoryRoutes)
 app.use('/api/chat-history',   apiCors, chatHistoryRoutes)
 app.use('/api/stats',          apiCors, statsRoutes)
+app.use('/api/topics',         apiCors, topicsRoutes)
 
 app.get('/api/health', apiCors, (_req, res) => res.json({ status: 'ok', time: new Date().toISOString() }))
 

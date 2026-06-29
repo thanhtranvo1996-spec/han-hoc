@@ -10,6 +10,7 @@ const TILES = [
   { to:'/vocab',     fa:'fa-book-open',       hz:'词', label:'Từ vựng',    sub:'Tổng hợp từ', bg:'linear-gradient(145deg,#2E7D32,#43A047)', delay:0.12 },
   { to:'/typing',    fa:'fa-keyboard',        hz:'打', label:'Luyện gõ',   sub:'Gõ Hán tự',   bg:'linear-gradient(145deg,#4527A0,#7E57C2)', delay:0.16 },
   { to:'/grammar',   fa:'fa-graduation-cap',  hz:'法', label:'Ngữ pháp',   sub:'HSK 1–6',     bg:'linear-gradient(145deg,#004D40,#00897B)', delay:0.20 },
+  { to:'/topic',     fa:'fa-wand-magic-sparkles', hz:'业', label:'Chủ đề AI', sub:'Từ vựng nghề', bg:'linear-gradient(145deg,#E65100,#FF6F00)', delay:0.22, badge:'MỚI' },
 ]
 
 const CSS = `
@@ -104,6 +105,12 @@ const CSS = `
 .tile-sub {
   color: rgba(255,255,255,0.6); font-size: 12px; margin-top: 4px;
 }
+.tile-badge {
+  position: absolute; top: 10px; right: 10px;
+  background: #FFF; color: #E65100;
+  font-size: 9px; font-weight: 900; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 20px;
+}
 `
 
 export default function HomePage() {
@@ -141,6 +148,7 @@ export default function HomePage() {
             >
               <div className="tile-shine" style={{ animationDelay: `${i * 0.65}s` }} />
               <span className="tile-hz font-hanzi" aria-hidden="true">{t.hz}</span>
+              {t.badge && <span className="tile-badge">{t.badge}</span>}
               <i className={`fa-solid ${t.fa} tile-fa`} aria-hidden="true" />
               <span className="tile-name">{t.label}</span>
               <span className="tile-sub">{t.sub}</span>
