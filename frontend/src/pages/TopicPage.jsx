@@ -20,7 +20,7 @@ const LEVELS = [
   { value: 'nâng cao',  label: 'Nâng cao — HSK 4+ / đi làm thực tế' },
 ]
 
-const COUNTS = [10, 15, 20, 30]
+const COUNTS = [10, 20, 30, 50, 75, 100]
 
 // ─── Card từ vựng ─────────────────────────────────────────────────────────────
 function WordCard({ word, idx }) {
@@ -179,8 +179,8 @@ function SetupScreen({ onGenerate, loading }) {
         </div>
 
         <div className="space-y-2">
-          <p className="font-semibold text-gray-700">Số từ muốn học</p>
-          <div className="grid grid-cols-2 gap-2">
+          <p className="font-semibold text-gray-700">Số từ muốn học <span className="text-xs text-gray-400 font-normal">(50+ từ sẽ mất ~15–30 giây)</span></p>
+          <div className="grid grid-cols-3 gap-2">
             {COUNTS.map(n => (
               <button key={n} onClick={() => setCount(n)}
                 className={`py-3 rounded-xl border-2 font-bold text-base transition-all
