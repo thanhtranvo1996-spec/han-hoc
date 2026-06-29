@@ -45,7 +45,7 @@ Trả về JSON duy nhất (không markdown, không giải thích):
   try {
     const completion = await groqClient().chat.completions.create({
       model: MODEL,
-      max_tokens: 3000,
+      max_tokens: 5000,
       temperature: 0.4,
       messages: [
         { role: 'system', content: 'Chỉ trả về JSON thuần, không thêm bất kỳ text nào khác.' },
@@ -55,9 +55,21 @@ Trả về JSON duy nhất (không markdown, không giải thích):
 
     const raw   = completion.choices[0].message.content.trim()
     const clean = raw.replace(/^```(?:json)?\s*/i, '').replace(/```\s*$/, '').trim()
-    const match = clean.match(/\{[\s\S]*\}/)
+    const match = clean.match(/\{[\s\S]*/)
     if (!match) throw new Error('AI không trả về JSON hợp lệ')
-    const parsed = JSON.parse(match[0])
+
+    let jsonStr = match[0]
+    let parsed
+    try {
+      parsed = JSON.parse(jsonStr)
+    } catch {
+      // Cắt tại entry cuối cùng hoàn chỉnh rồi đóng lại
+      const lastClose = jsonStr.lastIndexOf('},')
+      if (lastClose === -1) throw new Error('Không thể phục hồi JSON bị cắt')
+      jsonStr = jsonStr.slice(0, lastClose + 1) + ']}'
+      parsed = JSON.parse(jsonStr)
+    }
+
     if (!Array.isArray(parsed.words)) throw new Error('Thiếu trường words')
     res.json({ topic: label, level, words: parsed.words })
   } catch (e) {
