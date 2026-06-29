@@ -26,7 +26,7 @@ function blankSentence(sentence, word) {
 }
 
 // ─── Thanh cài đặt ────────────────────────────────────────────────────────────
-function SettingsBar({ level, mode, speed, score, onLevel, onMode, onSpeed }) {
+function SettingsBar({ level, mode, speed, score, limit, onLevel, onMode, onSpeed, onLimit }) {
   return (
     <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-14 z-40">
       <div className="max-w-2xl mx-auto flex flex-wrap items-center gap-2">
@@ -39,6 +39,14 @@ function SettingsBar({ level, mode, speed, score, onLevel, onMode, onSpeed }) {
           className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
           <option value="listen-choose">Nghe → Chọn nghĩa</option>
           <option value="listen-fill">Nghe → Điền từ</option>
+        </select>
+
+        <select value={limit} onChange={e => onLimit(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
+          <option value="5">5 câu</option>
+          <option value="10">10 câu</option>
+          <option value="20">20 câu</option>
+          <option value="inf">Không giới hạn</option>
         </select>
 
         <div className="flex gap-1">
@@ -68,20 +76,58 @@ function SettingsBar({ level, mode, speed, score, onLevel, onMode, onSpeed }) {
   )
 }
 
+// ─── Màn hình tổng kết ────────────────────────────────────────────────────────
+function SummaryScreen({ score, total, onContinue }) {
+  const pct   = total > 0 ? Math.round((score.correct / total) * 100) : 0
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '💪' : '📚'
+  const label = pct >= 80 ? 'Xuất sắc!' : pct >= 60 ? 'Tốt lắm!' : 'Cần ôn thêm'
+  return (
+    <div className="py-12 text-center space-y-6">
+      <div className="text-6xl">{emoji}</div>
+      <h2 className="text-2xl font-bold text-gray-800">Xong {total} câu luyện nghe!</h2>
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 space-y-4">
+        <p className="text-5xl font-black text-gray-800">
+          {score.correct}<span className="text-2xl text-gray-400">/{total}</span>
+        </p>
+        <p className="text-2xl font-bold text-red-600">{pct}% — {label}</p>
+        <div className="flex justify-center gap-10 text-sm">
+          <div className="text-center">
+            <p className="text-2xl font-bold text-green-500">{score.correct}</p>
+            <p className="text-gray-400">Đúng</p>
+          </div>
+          <div className="text-center">
+            <p className="text-2xl font-bold text-red-500">{score.wrong}</p>
+            <p className="text-gray-400">Sai</p>
+          </div>
+        </div>
+      </div>
+      <button onClick={onContinue}
+        className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl text-base transition-colors">
+        Luyện tiếp →
+      </button>
+    </div>
+  )
+}
+
 // ─── Chế độ 1: Nghe → Chọn nghĩa ─────────────────────────────────────────────
 function ListenChooseMode({ word, pool, speed, onCorrect, onWrong, onAdvance }) {
   const [choices,  setChoices]  = useState([])
   const [selected, setSelected] = useState(null)
-  const advancedRef = useRef(false)
-  const speedRef    = useRef(speed)
+  const advancedRef    = useRef(false)
+  const selectGuardRef = useRef(false)   // ngăn double-tap mobile
+  const timerRef       = useRef(null)
+  const speedRef       = useRef(speed)
   useEffect(() => { speedRef.current = speed }, [speed])
 
   useEffect(() => {
-    advancedRef.current = false
+    advancedRef.current    = false
+    selectGuardRef.current = false
+    if (timerRef.current) clearTimeout(timerRef.current)
     const others = shuffle(pool.filter(w => w.id !== word.id)).slice(0, 3)
     setChoices(shuffle([word, ...others]))
     setSelected(null)
     playTTS(word.chinese, speedRef.current)
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [word.id])
 
   const safeAdvance = useCallback(() => {
@@ -89,10 +135,15 @@ function ListenChooseMode({ word, pool, speed, onCorrect, onWrong, onAdvance }) 
   }, [onAdvance])
 
   const handleSelect = (i) => {
-    if (selected !== null) return
+    if (selectGuardRef.current) return   // chặn double-tap
+    selectGuardRef.current = true
     setSelected(i)
-    if (choices[i].id === word.id) { onCorrect(); setTimeout(safeAdvance, 1200) }
-    else onWrong()
+    if (choices[i].id === word.id) {
+      onCorrect()
+      timerRef.current = setTimeout(safeAdvance, 1200)
+    } else {
+      onWrong()
+    }
   }
 
   const correctIdx = choices.findIndex(c => c.id === word.id)
@@ -272,17 +323,27 @@ function ListenFillMode({ word, speed, onCorrect, onWrong, onAdvance }) {
 
 // ─── Root ─────────────────────────────────────────────────────────────────────
 export default function ListeningPage() {
-  const [level,   setLevel]   = useState(1)
-  const [mode,    setMode]    = useState('listen-choose')
-  const [speed,   setSpeed]   = useState('normal')
-  const [pool,    setPool]    = useState([])
-  const [idx,     setIdx]     = useState(0)
-  const [score,   setScore]   = useState({ correct: 0, wrong: 0 })
-  const [loading, setLoading] = useState(false)
-  const [error,   setError]   = useState(null)
+  const [level,     setLevel]     = useState(1)
+  const [mode,      setMode]      = useState('listen-choose')
+  const [speed,     setSpeed]     = useState('normal')
+  const [limit,     setLimit]     = useState('10')
+  const [pool,      setPool]      = useState([])
+  const [idx,       setIdx]       = useState(0)
+  const [score,     setScore]     = useState({ correct: 0, wrong: 0 })
+  const [completed, setCompleted] = useState(0)
+  const [done,      setDone]      = useState(false)
+  const [loading,   setLoading]   = useState(false)
+  const [error,     setError]     = useState(null)
+
+  // Refs để tránh stale closures trong callbacks
+  const poolLengthRef = useRef(0)
+  const limitRef      = useRef(limit)
+  useEffect(() => { poolLengthRef.current = pool.length }, [pool.length])
+  useEffect(() => { limitRef.current = limit },            [limit])
 
   useEffect(() => {
     setLoading(true); setError(null)
+    setDone(false); setCompleted(0); setScore({ correct: 0, wrong: 0 })
     fetch(`${BASE}/vocabulary/${level}`)
       .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
       .then(d => {
@@ -292,22 +353,39 @@ export default function ListeningPage() {
         }
         setPool(shuffle(words))
         setIdx(0)
-        setScore({ correct: 0, wrong: 0 })
       })
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
   }, [level, mode])
 
   const currentWord = pool[idx] ?? null
-  const advance = useCallback(() => setIdx(i => (i + 1) % pool.length), [pool.length])
+
+  const advance = useCallback(() => {
+    setIdx(i => (i + 1) % (poolLengthRef.current || 1))
+    setCompleted(c => {
+      const next = c + 1
+      const lim  = limitRef.current === 'inf' ? Infinity : Number(limitRef.current)
+      if (next >= lim) setDone(true)
+      return next
+    })
+  }, [])
+
   const addCorrect = useCallback(() => setScore(s => ({ ...s, correct: s.correct + 1 })), [])
   const addWrong   = useCallback(() => setScore(s => ({ ...s, wrong:   s.wrong   + 1 })), [])
+
+  const handleContinue = () => {
+    setDone(false)
+    setCompleted(0)
+    setScore({ correct: 0, wrong: 0 })
+  }
+
+  const limitNum = limit === 'inf' ? Infinity : Number(limit)
 
   return (
     <div>
       <SettingsBar
-        level={level} mode={mode} speed={speed} score={score}
-        onLevel={setLevel} onMode={setMode} onSpeed={setSpeed}
+        level={level} mode={mode} speed={speed} score={score} limit={limit}
+        onLevel={setLevel} onMode={setMode} onSpeed={setSpeed} onLimit={setLimit}
       />
 
       <div className="max-w-lg mx-auto px-4 py-8">
@@ -317,14 +395,18 @@ export default function ListeningPage() {
           <div className="bg-red-50 text-red-600 rounded-xl p-4 text-sm">Lỗi: {error}</div>
         )}
 
-        {!loading && !error && pool.length === 0 && (
+        {!loading && !error && done && (
+          <SummaryScreen score={score} total={completed} onContinue={handleContinue} />
+        )}
+
+        {!loading && !error && !done && pool.length === 0 && (
           <div className="text-center text-gray-400 py-20 space-y-2">
             <div className="text-5xl">😕</div>
             <p>Không có dữ liệu cho HSK {level}{mode === 'listen-fill' ? ' (không có câu ví dụ)' : ''}</p>
           </div>
         )}
 
-        {!loading && !error && currentWord && mode === 'listen-choose' && (
+        {!loading && !error && !done && currentWord && mode === 'listen-choose' && (
           <ListenChooseMode
             key={`choose-${level}-${idx}`}
             word={currentWord} pool={pool} speed={speed}
@@ -332,12 +414,26 @@ export default function ListeningPage() {
           />
         )}
 
-        {!loading && !error && currentWord && mode === 'listen-fill' && (
+        {!loading && !error && !done && currentWord && mode === 'listen-fill' && (
           <ListenFillMode
             key={`fill-${level}-${idx}`}
             word={currentWord} speed={speed}
             onCorrect={addCorrect} onWrong={addWrong} onAdvance={advance}
           />
+        )}
+
+        {/* Thanh tiến độ khi có giới hạn câu */}
+        {!loading && !error && !done && limit !== 'inf' && pool.length > 0 && (
+          <div className="mt-6">
+            <div className="flex justify-between text-xs text-gray-400 mb-1.5">
+              <span>Tiến độ luyện nghe</span>
+              <span>{completed} / {limitNum}</span>
+            </div>
+            <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
+              <div className="h-full bg-red-500 transition-all rounded-full"
+                style={{ width: `${Math.min((completed / limitNum) * 100, 100)}%` }} />
+            </div>
+          </div>
         )}
       </div>
     </div>

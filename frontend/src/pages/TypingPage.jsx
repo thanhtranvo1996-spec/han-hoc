@@ -1,5 +1,15 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { pinyin as toPinyin } from 'pinyin-pro'
 import { API as BASE } from '../api/config'
+
+function getPinyin(sentence) {
+  if (sentence.pinyin) return sentence.pinyin
+  try {
+    return toPinyin(sentence.chinese, { toneType: 'symbol', separator: ' ' })
+  } catch {
+    return ''
+  }
+}
 
 // ─── So sánh từng ký tự ──────────────────────────────────────────────────────
 function DiffResult({ typed, target }) {
@@ -95,9 +105,7 @@ function SentenceCard({ sentence, onNext, onCorrect, onWrong }) {
       <div className="bg-red-50 px-6 py-5 border-b border-red-100">
         <p className="text-xs text-red-400 font-medium uppercase tracking-wider mb-1">Nghĩa tiếng Việt</p>
         <p className="text-xl text-gray-800 font-medium leading-relaxed">{sentence.vietnamese}</p>
-        {sentence.pinyin && (
-          <p className="text-sm text-gray-400 mt-1">{sentence.pinyin}</p>
-        )}
+        <p className="text-sm text-gray-400 mt-1">{getPinyin(sentence)}</p>
       </div>
 
       <div className="px-6 py-5 space-y-5">
