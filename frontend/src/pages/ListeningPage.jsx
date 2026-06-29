@@ -28,7 +28,7 @@ function blankSentence(sentence, word) {
 // ─── Thanh cài đặt ────────────────────────────────────────────────────────────
 function SettingsBar({ level, mode, speed, score, limit, onLevel, onMode, onSpeed, onLimit }) {
   return (
-    <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-14 z-40">
+    <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-40">
       <div className="max-w-2xl mx-auto flex flex-wrap items-center gap-2">
         <select value={level} onChange={e => onLevel(Number(e.target.value))}
           className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">

@@ -249,7 +249,7 @@ export default function TypingPage() {
   return (
     <div>
       {/* Thanh cài đặt */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-14 z-40">
+      <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-40">
         <div className="max-w-xl mx-auto flex flex-wrap items-center gap-3">
           <select
             value={level}
