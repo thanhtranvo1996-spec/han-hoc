@@ -291,7 +291,7 @@ function ResultScreen({ score, total, wrongs, mode, onRetry, onHome }) {
 }
 
 // Thêm nút "Chi tiết" trong ResultScreen
-function ResultScreenWithDetail({ score, total, wrongs, mode, onRetry, onHome }) {
+function ResultScreenWithDetail({ score, total, wrongs, mode, onRetry, onRetryWrongs, onHome }) {
   const [detail, setDetail] = useState(null)
   const pct = Math.round((score / total) * 100)
   const { emoji, label, color } =
@@ -328,9 +328,23 @@ function ResultScreenWithDetail({ score, total, wrongs, mode, onRetry, onHome })
           </div>
         </div>
       )}
-      <div className="flex gap-3">
-        <button onClick={onRetry}  className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl">Làm lại</button>
-        <button onClick={onHome}   className="flex-1 bg-white hover:bg-gray-50 text-gray-700 font-bold py-3 rounded-xl border border-gray-300">Về trang chủ</button>
+      <div className="flex flex-col gap-3">
+        {wrongs.length > 0 && (
+          <button
+            onClick={() => onRetryWrongs(wrongs.map(w => w.q))}
+            className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3.5 rounded-xl transition-colors text-base"
+          >
+            🔁 Làm lại {wrongs.length} câu sai
+          </button>
+        )}
+        <div className="flex gap-3">
+          <button onClick={onRetry} className="flex-1 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 rounded-xl border border-gray-300 transition-colors">
+            Làm bài mới
+          </button>
+          <button onClick={onHome} className="flex-1 bg-white hover:bg-gray-50 text-gray-700 font-semibold py-3 rounded-xl border border-gray-300 transition-colors">
+            Về trang chủ
+          </button>
+        </div>
       </div>
       {detail && <WordDetail word={detail} onClose={() => setDetail(null)} />}
     </div>
@@ -373,6 +387,14 @@ export default function QuizPage() {
     setQuestions([])
   }
 
+  const handleRetryWrongs = (wrongQs) => {
+    // Xáo trộn lại thứ tự các câu sai
+    const shuffled = [...wrongQs].sort(() => Math.random() - 0.5)
+    setQuestions(shuffled)
+    setResult(null)
+    setScreen('quiz')
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh] text-gray-400 text-lg">
@@ -407,6 +429,7 @@ export default function QuizPage() {
       {...result}
       mode={config.mode}
       onRetry={handleRetry}
+      onRetryWrongs={handleRetryWrongs}
       onHome={() => navigate('/')}
     />
   )
