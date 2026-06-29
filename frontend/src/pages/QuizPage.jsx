@@ -28,7 +28,7 @@ function SetupScreen({ onStart }) {
   const [limit,  setLimit]  = useState(10)
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16 flex flex-col items-center gap-8">
+    <div className="max-w-2xl mx-auto px-4 py-12 pb-24 flex flex-col items-center gap-8">
       <div className="text-center">
         <span className="text-5xl">📝</span>
         <h1 className="text-2xl font-bold text-gray-800 mt-3">Quiz Trắc nghiệm</h1>
@@ -158,7 +158,7 @@ function QuizScreen({ questions, mode, onFinish }) {
   const isHanMode = mode === 'han-to-viet'
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-8 flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6">
       {/* Tiến trình */}
       <div>
         <div className="flex justify-between text-sm text-gray-500 mb-1.5">
@@ -177,7 +177,7 @@ function QuizScreen({ questions, mode, onFinish }) {
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-6 py-8 text-center min-h-[160px] flex flex-col items-center justify-center gap-3">
         {isHanMode ? (
           <>
-            <p className="font-hanzi text-[72px] leading-none text-gray-800">{q.question.chinese}</p>
+            <p className="font-hanzi text-[96px] leading-none text-gray-800">{q.question.chinese}</p>
             <button
               onClick={() => speak(q.question.chinese)}
               className="text-2xl hover:scale-110 transition-transform"
@@ -201,7 +201,7 @@ function QuizScreen({ questions, mode, onFinish }) {
             key={i}
             onClick={() => handleChoose(i)}
             disabled={chosen !== null}
-            className={`border-2 rounded-xl px-4 py-4 text-sm transition-colors leading-snug
+            className={`border-2 rounded-xl px-4 py-5 text-base transition-colors leading-snug
               ${getColor(i)}
               ${i === q.correct && chosen !== null ? COLORS.correct : ''}
             `}
@@ -238,7 +238,7 @@ function ResultScreen({ score, total, wrongs, mode, onRetry, onHome }) {
                 { emoji: '📚', label: 'Cần ôn thêm',   color: 'text-orange-500' }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-10 flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto px-4 py-8 pb-24 flex flex-col gap-6">
       {/* Điểm */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 text-center">
         <p className="text-6xl font-black text-gray-800">{score}<span className="text-3xl text-gray-400">/{total}</span></p>
@@ -297,7 +297,7 @@ function ResultScreenWithDetail({ score, total, wrongs, mode, onRetry, onHome })
                 { emoji: '📚', label: 'Cần ôn thêm', color: 'text-orange-500' }
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-10 flex flex-col gap-6">
+    <div className="max-w-2xl mx-auto px-4 py-8 pb-24 flex flex-col gap-6">
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-8 text-center">
         <p className="text-6xl font-black text-gray-800">{score}<span className="text-3xl text-gray-400">/{total}</span></p>
         <p className={`text-3xl font-bold mt-1 ${color}`}>{pct}%</p>
@@ -380,7 +380,7 @@ export default function QuizPage() {
 
   if (error) {
     return (
-      <div className="max-w-md mx-auto px-4 py-16 text-center space-y-4">
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center space-y-4">
         <p className="text-red-600 font-semibold">Lỗi: {error}</p>
         <button onClick={() => setError(null)} className="text-sm text-gray-500 underline">
           Thử lại

@@ -46,14 +46,14 @@ export default function FlashCard({ word, onKnow, onUnknow }) {
   }
 
   return (
-    <div className="w-full max-w-sm mx-auto" style={{ perspective: '1000px' }}>
+    <div className="w-full max-w-xl mx-auto" style={{ perspective: '1000px' }}>
       {/* Card wrapper — giữ chiều cao cố định */}
       <div
         ref={cardRef}
         onClick={handleFlip}
         className="relative w-full cursor-pointer select-none"
         style={{
-          height: '380px',
+          height: '460px',
           transformStyle: 'preserve-3d',
           transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
           transform: flipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
@@ -79,7 +79,7 @@ export default function FlashCard({ word, onKnow, onUnknow }) {
           {/* Chữ Hán */}
           <p
             className="font-hanzi font-black text-gray-900 leading-none"
-            style={{ fontSize: '72px' }}
+            style={{ fontSize: '96px' }}
           >
             {word.chinese}
           </p>

@@ -250,7 +250,7 @@ export default function TypingPage() {
     <div>
       {/* Thanh cài đặt */}
       <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-40">
-        <div className="max-w-xl mx-auto flex flex-wrap items-center gap-3">
+        <div className="max-w-3xl mx-auto flex flex-wrap items-center gap-3">
           <select
             value={level}
             onChange={e => setLevel(Number(e.target.value))}
@@ -274,7 +274,7 @@ export default function TypingPage() {
         </div>
       </div>
 
-      <div className="max-w-xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-6 pb-24">
         {loading && (
           <div className="text-center text-gray-400 py-20 text-lg">
             Đang tải câu luyện tập...

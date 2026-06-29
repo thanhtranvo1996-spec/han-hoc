@@ -285,7 +285,7 @@ export default function WritingPage() {
   const [level, setLevel] = useState(1)
 
   return (
-    <div className="max-w-lg mx-auto px-4 py-6">
+    <div className="max-w-2xl mx-auto px-4 py-6 pb-24">
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <h1 className="text-xl font-bold text-gray-800">Đặt câu & Sắp xếp</h1>

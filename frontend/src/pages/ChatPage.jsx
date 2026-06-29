@@ -290,7 +290,7 @@ export default function ChatPage() {
   const toggleViet = (id) => setShowViet(prev => ({ ...prev, [id]: !prev[id] }))
 
   return (
-    <div className="flex h-[calc(100vh-56px)] overflow-hidden relative">
+    <div className="flex h-screen overflow-hidden relative">
 
       {/* ── Chat area ───────────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0">

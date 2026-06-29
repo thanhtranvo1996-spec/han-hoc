@@ -104,7 +104,7 @@ export default function FlashcardPage() {
   const progress = total ? Math.round((index / total) * 100) : 0
 
   return (
-    <main className="max-w-lg mx-auto px-4 py-8">
+    <main className="max-w-2xl mx-auto px-4 py-6 pb-24">
 
       {/* ── HEADER ───────────────────────────────── */}
       <div className="mb-6 space-y-3">

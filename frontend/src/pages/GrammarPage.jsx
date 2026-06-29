@@ -285,7 +285,7 @@ export default function GrammarPage() {
   }, [level])
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-6 pb-24">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">Ngữ pháp</h1>
       <p className="text-gray-500 text-sm mb-6">Chọn cấp HSK để xem các điểm ngữ pháp</p>
 

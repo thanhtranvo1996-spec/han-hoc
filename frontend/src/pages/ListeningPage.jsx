@@ -29,7 +29,7 @@ function blankSentence(sentence, word) {
 function SettingsBar({ level, mode, speed, score, limit, onLevel, onMode, onSpeed, onLimit }) {
   return (
     <div className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-40">
-      <div className="max-w-2xl mx-auto flex flex-wrap items-center gap-2">
+      <div className="max-w-2xl mx-auto flex flex-wrap items-center gap-3">
         <select value={level} onChange={e => onLevel(Number(e.target.value))}
           className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400">
           {[1,2,3,4,5,6,7,8,9].map(lv => <option key={lv} value={lv}>HSK {lv}</option>)}
@@ -185,7 +185,7 @@ function ListenChooseMode({ word, pool, speed, onCorrect, onWrong, onAdvance }) 
       <div className="grid grid-cols-2 gap-3">
         {choices.map((ch, i) => (
           <button key={i} onClick={() => handleSelect(i)} disabled={selected !== null}
-            className={`border-2 rounded-xl px-4 py-4 text-sm text-left leading-snug transition-colors ${cellStyle(i)}`}>
+            className={`border-2 rounded-xl px-4 py-5 text-base text-left leading-snug transition-colors ${cellStyle(i)}`}>
             {selected !== null && i === correctIdx && <span className="mr-1">✅</span>}
             {ch.vietnamese}
           </button>
@@ -388,7 +388,7 @@ export default function ListeningPage() {
         onLevel={setLevel} onMode={setMode} onSpeed={setSpeed} onLimit={setLimit}
       />
 
-      <div className="max-w-lg mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-6 pb-24">
         {loading && <div className="text-center text-gray-400 py-20 text-lg">Đang tải...</div>}
 
         {error && (
