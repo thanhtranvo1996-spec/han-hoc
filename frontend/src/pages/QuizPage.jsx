@@ -12,13 +12,11 @@ async function fetchQuiz(level, mode, limit) {
   return json.data
 }
 
+let _quizAud = null
 function speak(text) {
-  if (!window.speechSynthesis) return
-  window.speechSynthesis.cancel()
-  const u = new SpeechSynthesisUtterance(text)
-  u.lang = 'zh-CN'
-  u.rate = 0.85
-  window.speechSynthesis.speak(u)
+  if (_quizAud) { _quizAud.pause(); _quizAud = null }
+  _quizAud = new Audio(`${BASE}/tts?text=${encodeURIComponent(text)}&speed=normal`)
+  _quizAud.play().catch(() => {})
 }
 
 // ─── Màn hình 1: Cài đặt ─────────────────────────────────────────────────────
@@ -118,6 +116,11 @@ function QuizScreen({ questions, mode, onFinish }) {
   const [score,    setScore]    = useState(0)
 
   const q = questions[idx]
+
+  // Auto-play khi câu mới xuất hiện (chỉ chế độ hán → việt)
+  useEffect(() => {
+    if (mode === 'han-to-viet') speak(q.question.chinese)
+  }, [idx])
 
   const handleChoose = useCallback((i) => {
     if (chosen !== null) return
