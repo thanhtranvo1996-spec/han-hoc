@@ -22,21 +22,35 @@ const LEVELS = [
 
 const COUNTS = [10, 20, 30, 50, 75, 100]
 
+// ─── TTS helper (dùng chung toàn file) ───────────────────────────────────────
+let _topicAud = null
+async function playTTS(text) {
+  const clean = (text || '').trim()
+  if (!clean) return
+  if (_topicAud) { _topicAud.pause(); _topicAud = null }
+  const a = new Audio(`${API}/tts?text=${encodeURIComponent(clean)}&speed=normal`)
+  _topicAud = a
+  await a.play()
+}
+
 // ─── Card từ vựng ─────────────────────────────────────────────────────────────
 function WordCard({ word, idx }) {
-  const [flipped, setFlipped]   = useState(false)
-  const [playing, setPlaying]   = useState(false)
-  const audRef = useRef(null)
+  const [flipped,  setFlipped]  = useState(false)
+  const [playing,  setPlaying]  = useState(false)
+  const [audioErr, setAudioErr] = useState(false)
 
-  const play = (text, e) => {
+  const play = async (text, e) => {
     e?.stopPropagation()
-    if (audRef.current) { audRef.current.pause(); audRef.current = null }
+    if (playing) return
+    setAudioErr(false)
     setPlaying(true)
-    const a = new Audio(`${API}/tts?text=${encodeURIComponent(text)}&speed=normal`)
-    audRef.current = a
-    a.onended = () => setPlaying(false)
-    a.onerror = () => setPlaying(false)
-    a.play().catch(() => setPlaying(false))
+    try {
+      await playTTS(text)
+    } catch {
+      setAudioErr(true)
+      setTimeout(() => setAudioErr(false), 2000)
+    }
+    setPlaying(false)
   }
 
   return (
@@ -54,11 +68,11 @@ function WordCard({ word, idx }) {
           <button
             onClick={e => play(word.chinese, e)}
             className={`mt-1 w-10 h-10 rounded-full flex items-center justify-center text-lg transition-colors
-              ${playing ? 'bg-red-500 text-white' : 'bg-red-50 hover:bg-red-100 text-red-500'}`}
+              ${audioErr ? 'bg-orange-100 text-orange-500' : playing ? 'bg-red-500 text-white' : 'bg-red-50 hover:bg-red-100 text-red-500'}`}
           >
-            🔊
+            {audioErr ? '⚠️' : '🔊'}
           </button>
-          <p className="text-xs text-gray-400 mt-1">Bấm để xem nghĩa</p>
+          <p className="text-xs text-gray-400 mt-1">{audioErr ? 'Lỗi âm thanh' : 'Bấm để xem nghĩa'}</p>
         </div>
       ) : (
         /* Mặt sau — nghĩa + ví dụ */
@@ -295,10 +309,7 @@ function ResultScreen({ result, onReset }) {
                   <p className="text-gray-800 text-base">{w.vietnamese}</p>
                 </div>
                 <button
-                  onClick={() => {
-                    const a = new Audio(`${API}/tts?text=${encodeURIComponent(w.chinese)}&speed=normal`)
-                    a.play().catch(() => {})
-                  }}
+                  onClick={() => playTTS(w.chinese).catch(() => {})}
                   className="text-xl hover:scale-110 transition-transform shrink-0"
                 >🔊</button>
               </div>
