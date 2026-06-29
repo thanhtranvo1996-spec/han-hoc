@@ -2,24 +2,39 @@ import { useState, useEffect, useRef } from 'react'
 import SentenceBuilder from '../components/SentenceBuilder'
 import { API } from '../api/config'
 
+const LIMIT_OPTS = [
+  { label: '5 câu',          value: 5   },
+  { label: '10 câu',         value: 10  },
+  { label: '20 câu',         value: 20  },
+  { label: '50 câu',         value: 50  },
+  { label: '100 câu',        value: 100 },
+  { label: 'Tất cả',         value: 9999 },
+]
+
 // ─── Tab 1: Sắp xếp câu ──────────────────────────────────────────────────────
 function SentenceOrderTab({ level }) {
   const [items,   setItems]   = useState([])
   const [idx,     setIdx]     = useState(0)
   const [score,   setScore]   = useState(0)
+  const [limit,   setLimit]   = useState(20)
   const [loading, setLoading] = useState(false)
   const [error,   setError]   = useState(null)
 
-  const load = () => {
-    setLoading(true); setError(null)
-    fetch(`${API}/vocabulary/sentences?level=${level}&limit=20`)
+  const load = (lim = limit) => {
+    setLoading(true); setError(null); setIdx(0); setScore(0)
+    fetch(`${API}/vocabulary/sentences?level=${level}&limit=${lim}`)
       .then(r => r.json())
-      .then(d => { setItems(d.data || []); setIdx(0) })
+      .then(d => setItems(d.data || []))
       .catch(e => setError(e.message))
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => { load() }, [level])
+  useEffect(() => { load(limit) }, [level])
+
+  const handleLimitChange = (val) => {
+    setLimit(val)
+    load(val)
+  }
 
   const handleNext = () => setIdx(i => i + 1)
 
@@ -33,7 +48,7 @@ function SentenceOrderTab({ level }) {
         <p className="text-5xl">🎉</p>
         <p className="text-xl font-bold text-gray-800">Xong {items.length} câu!</p>
         <p className="text-gray-500">Đúng: <span className="text-green-600 font-bold">{score}</span> / {items.length}</p>
-        <button onClick={() => { load(); setScore(0) }}
+        <button onClick={() => load(limit)}
           className="px-6 py-3 bg-red-600 text-white rounded-xl font-semibold">Làm lại</button>
       </div>
     )
@@ -41,9 +56,24 @@ function SentenceOrderTab({ level }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between text-sm text-gray-500">
-        <span>Câu {idx + 1} / {items.length}</span>
-        <span className="text-green-600 font-semibold">✅ {score} đúng</span>
+      {/* Thanh điều khiển: số câu + tiến độ */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>Câu {idx + 1} / {items.length}</span>
+          <span className="text-green-600 font-semibold">✅ {score} đúng</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-sm text-gray-400">Số câu:</span>
+          <select
+            value={limit}
+            onChange={e => handleLimitChange(Number(e.target.value))}
+            className="border border-gray-300 rounded-lg px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          >
+            {LIMIT_OPTS.map(o => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className="h-1.5 bg-gray-200 rounded-full overflow-hidden">
         <div className="h-full bg-red-500 transition-all" style={{ width: `${(idx / items.length) * 100}%` }} />
