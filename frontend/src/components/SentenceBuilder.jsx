@@ -57,7 +57,7 @@ function SortableChip({ id, label, status, onClick }) {
       {...listeners}
       onClick={onClick}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.3 : 1, touchAction: 'none' }}
-      className={`px-3 py-1.5 rounded-full text-sm font-hanzi font-medium cursor-pointer select-none border-2 transition-all ${colors[status ?? 'dest']}`}
+      className={`px-4 py-2 rounded-full text-base font-hanzi font-semibold cursor-pointer select-none border-2 transition-all ${colors[status ?? 'dest']}`}
     >
       {label}
     </div>
@@ -69,7 +69,7 @@ function SourceChip({ label, onClick }) {
   return (
     <button
       onClick={onClick}
-      className="px-3 py-1.5 rounded-full text-sm font-hanzi font-medium cursor-pointer select-none border-2 border-blue-300 bg-blue-50 text-blue-800 hover:bg-blue-100 hover:border-blue-500 active:scale-95 transition-all"
+      className="px-4 py-2 rounded-full text-base font-hanzi font-semibold cursor-pointer select-none border-2 border-blue-400 bg-blue-50 text-blue-900 hover:bg-blue-100 hover:border-blue-600 active:scale-95 transition-all"
     >
       {label}
     </button>
@@ -166,17 +166,19 @@ export default function SentenceBuilder({ item, speed = 'normal', onCorrect, onW
       {/* Thông tin từ */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-5 py-4 flex items-center gap-4">
         <div className="flex-1 min-w-0">
-          <span className="font-hanzi text-2xl text-gray-800">{word.chinese}</span>
-          <span className="text-blue-500 text-sm ml-2">{word.pinyin}</span>
-          <p className="text-gray-500 text-xs mt-0.5">{word.vietnamese}</p>
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="font-hanzi text-3xl font-bold text-gray-900">{word.chinese}</span>
+            <span className="text-blue-600 text-base font-medium">{word.pinyin}</span>
+          </div>
+          <p className="text-gray-700 text-base mt-1">{word.vietnamese}</p>
         </div>
         <button onClick={() => playTTS(sentence, speed)}
-          className="w-10 h-10 rounded-full bg-red-50 hover:bg-red-100 text-lg shrink-0">🔊</button>
+          className="w-11 h-11 rounded-full bg-red-50 hover:bg-red-100 text-xl shrink-0">🔊</button>
       </div>
 
       {/* Khu vực đích — có sortable để reorder */}
       <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">Câu của bạn</p>
+        <p className="text-sm font-bold text-gray-600 uppercase tracking-wide mb-2">Câu của bạn</p>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -191,7 +193,7 @@ export default function SentenceBuilder({ item, speed = 'normal', onCorrect, onW
                                     'border-gray-300  bg-gray-50'
             }`}>
               {dest.length === 0 && !checked && (
-                <span className="text-gray-400 text-sm self-center">Bấm vào từ bên dưới để thêm vào đây...</span>
+                <span className="text-gray-500 text-base self-center">Bấm vào từ bên dưới để thêm vào đây...</span>
               )}
               {dest.map((chip, idx) => (
                 <SortableChip
@@ -215,12 +217,12 @@ export default function SentenceBuilder({ item, speed = 'normal', onCorrect, onW
 
       {/* Khu vực nguồn — chỉ click */}
       <div>
-        <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-2">
-          Từ có sẵn {source.length > 0 && <span className="text-blue-400 normal-case font-normal">(bấm để thêm vào câu)</span>}
+        <p className="text-sm font-bold text-gray-600 uppercase tracking-wide mb-2">
+          Từ có sẵn {source.length > 0 && <span className="text-blue-600 normal-case font-normal">(bấm để thêm vào câu)</span>}
         </p>
         <div className="min-h-[48px] rounded-xl bg-blue-50 border border-blue-100 p-3 flex flex-wrap gap-2">
           {source.length === 0
-            ? <span className="text-blue-300 text-sm self-center">Đã dùng hết — bấm vào câu để trả lại</span>
+            ? <span className="text-blue-500 text-base self-center">Đã dùng hết — bấm vào câu để trả lại</span>
             : source.map(chip => (
                 <SourceChip key={chip.id} label={chip.label} onClick={() => handleSourceClick(chip)} />
               ))
@@ -230,14 +232,14 @@ export default function SentenceBuilder({ item, speed = 'normal', onCorrect, onW
 
       {/* Kết quả */}
       {checked && (
-        <div className={`rounded-xl px-4 py-3 text-sm font-medium ${
+        <div className={`rounded-xl px-4 py-3 text-base font-semibold ${
           correct ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
           {correct
             ? '🎉 Chính xác!'
             : <span>
                 ❌ Câu đúng:{' '}
-                <span className="font-hanzi text-base font-semibold">{sentence}</span>
-                <button onClick={() => playTTS(sentence, speed)} className="ml-2 text-base">🔊</button>
+                <span className="font-hanzi text-lg font-bold">{sentence}</span>
+                <button onClick={() => playTTS(sentence, speed)} className="ml-2 text-lg">🔊</button>
               </span>
           }
         </div>
@@ -247,20 +249,20 @@ export default function SentenceBuilder({ item, speed = 'normal', onCorrect, onW
       <div className="flex gap-3">
         {!checked && dest.length > 0 && (
           <button onClick={() => { setSource(makeChips(words_shuffled)); setDest([]) }}
-            className="px-4 py-2.5 rounded-xl border border-gray-300 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+            className="px-5 py-3 rounded-xl border border-gray-300 text-base text-gray-700 hover:bg-gray-50 transition-colors font-medium">
             Xóa tất cả
           </button>
         )}
         {!checked && (
           <button onClick={handleCheck} disabled={dest.length === 0}
-            className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-colors ${
-              allPlaced ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
+            className={`flex-1 py-3 rounded-xl text-base font-bold transition-colors ${
+              allPlaced ? 'bg-red-600 hover:bg-red-700 text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}>
             {allPlaced ? 'Kiểm tra' : `Còn ${source.length} từ chưa xếp`}
           </button>
         )}
         {checked && (
           <button onClick={onNext}
-            className="flex-1 py-2.5 rounded-xl text-sm font-bold bg-gray-800 hover:bg-gray-900 text-white transition-colors">
+            className="flex-1 py-3 rounded-xl text-base font-bold bg-gray-800 hover:bg-gray-900 text-white transition-colors">
             Tiếp tục →
           </button>
         )}
