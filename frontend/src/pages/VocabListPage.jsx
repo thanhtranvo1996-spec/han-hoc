@@ -38,14 +38,14 @@ function VocabCard({ item }) {
       >
         {playing ? '🔊' : '🔈'}
       </button>
-      <span className="font-hanzi text-2xl font-bold text-[#C0392B] leading-none min-w-[2rem]">
+      <span className="font-hanzi text-3xl font-bold text-[#C0392B] leading-none min-w-[2.5rem]">
         {item.chinese}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-blue-500 font-medium">{pinyin}</p>
-        <p className="text-gray-700 font-medium text-sm mt-0.5">{item.vietnamese}</p>
+        <p className="text-base text-blue-500 font-medium">{pinyin}</p>
+        <p className="text-gray-700 font-semibold text-base mt-0.5">{item.vietnamese}</p>
         {item.example && (
-          <p className="font-hanzi text-gray-400 text-xs mt-0.5 truncate">{item.example}</p>
+          <p className="font-hanzi text-gray-400 text-sm mt-0.5 truncate">{item.example}</p>
         )}
       </div>
     </div>
@@ -86,7 +86,7 @@ export default function VocabListPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Danh sách từ vựng</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Danh sách từ vựng</h1>
           {!loading && !error && (
             <p className="text-sm text-gray-400 mt-1">
               HSK {level} — <span className="font-semibold text-[#C0392B]">

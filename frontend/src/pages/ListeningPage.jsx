@@ -175,8 +175,8 @@ function ListenChooseMode({ word, pool, speed, onCorrect, onWrong, onAdvance }) 
         </div>
         {selected !== null && (
           <div className="pt-1 animate-[fadeIn_0.3s_ease]">
-            <span className="font-hanzi text-4xl text-gray-800">{word.chinese}</span>
-            <span className="text-red-500 text-lg ml-3">{word.pinyin}</span>
+            <span className="font-hanzi text-5xl text-gray-800">{word.chinese}</span>
+            <span className="text-red-500 text-xl ml-3">{word.pinyin}</span>
           </div>
         )}
       </div>

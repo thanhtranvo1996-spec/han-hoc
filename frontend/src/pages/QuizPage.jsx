@@ -31,18 +31,18 @@ function SetupScreen({ onStart }) {
     <div className="max-w-2xl mx-auto px-4 py-12 pb-24 flex flex-col items-center gap-8">
       <div className="text-center">
         <span className="text-5xl">📝</span>
-        <h1 className="text-2xl font-bold text-gray-800 mt-3">Quiz Trắc nghiệm</h1>
-        <p className="text-gray-500 text-sm mt-1">Kiểm tra từ vựng của bạn</p>
+        <h1 className="text-3xl font-bold text-gray-800 mt-3">Quiz Trắc nghiệm</h1>
+        <p className="text-gray-500 text-base mt-1">Kiểm tra từ vựng của bạn</p>
       </div>
 
       <div className="w-full bg-white rounded-2xl shadow-sm border border-gray-200 p-6 space-y-5">
         {/* Cấp HSK */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Cấp độ HSK</label>
+          <label className="block text-base font-semibold text-gray-700 mb-2">Cấp độ HSK</label>
           <select
             value={level}
             onChange={e => setLevel(Number(e.target.value))}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+            className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-red-400"
           >
             {[1,2,3,4,5,6,7,8,9].map(lv => (
               <option key={lv} value={lv}>HSK {lv}</option>
@@ -52,7 +52,7 @@ function SetupScreen({ onStart }) {
 
         {/* Chế độ */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Chế độ</label>
+          <label className="block text-base font-semibold text-gray-700 mb-2">Chế độ</label>
           <div className="grid grid-cols-2 gap-2">
             {[
               { value: 'han-to-viet', label: '汉 → Việt' },
@@ -75,7 +75,7 @@ function SetupScreen({ onStart }) {
 
         {/* Số câu */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">Số câu hỏi</label>
+          <label className="block text-base font-semibold text-gray-700 mb-2">Số câu hỏi</label>
           <div className="grid grid-cols-3 gap-2">
             {[10, 20, 50].map(n => (
               <button

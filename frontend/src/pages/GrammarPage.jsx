@@ -7,13 +7,13 @@ function SimpleMarkdown({ text }) {
   if (!text) return null
   const lines = text.split('\n')
   return (
-    <div className="space-y-1.5 text-sm text-gray-700 leading-relaxed">
+    <div className="space-y-1.5 text-base text-gray-700 leading-relaxed">
       {lines.map((line, i) => {
         if (!line.trim()) return <div key={i} className="h-1" />
 
         // Heading ##
         if (line.startsWith('## ')) {
-          return <h3 key={i} className="font-bold text-gray-900 text-base mt-3 mb-1">{line.slice(3)}</h3>
+          return <h3 key={i} className="font-bold text-gray-900 text-lg mt-3 mb-1">{line.slice(3)}</h3>
         }
         if (line.startsWith('### ')) {
           return <h4 key={i} className="font-semibold text-gray-800 mt-2">{line.slice(4)}</h4>
@@ -59,14 +59,14 @@ function ExerciseQuestion({ ex, idx }) {
 
   return (
     <div className="space-y-2">
-      <p className="font-medium text-gray-800 text-sm">
+      <p className="font-medium text-gray-800 text-base">
         <span className="text-red-600 font-bold mr-2">Câu {idx + 1}.</span>
         <span className="font-hanzi">{ex.question}</span>
       </p>
       <div className="grid grid-cols-1 gap-2">
         {ex.choices.map((ch, i) => (
           <button key={i} onClick={() => handleChoose(i)} disabled={chosen !== null}
-            className={`border-2 rounded-xl px-4 py-2.5 text-sm text-left transition-colors ${getStyle(i)}`}>
+            className={`border-2 rounded-xl px-4 py-3 text-base text-left transition-colors ${getStyle(i)}`}>
             <span className="font-bold mr-2 text-gray-500">
               {String.fromCharCode(65 + i)}.
             </span>
@@ -77,7 +77,7 @@ function ExerciseQuestion({ ex, idx }) {
         ))}
       </div>
       {chosen !== null && (
-        <div className={`rounded-lg px-3 py-2 text-xs ${chosen === ex.correct ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-800'}`}>
+        <div className={`rounded-lg px-3 py-2 text-sm ${chosen === ex.correct ? 'bg-green-50 text-green-700' : 'bg-orange-50 text-orange-800'}`}>
           💡 {ex.explanation}
         </div>
       )}
@@ -86,18 +86,18 @@ function ExerciseQuestion({ ex, idx }) {
 }
 
 function ExercisesPanel({ exercises, loading, error, onLoad }) {
-  if (loading) return <div className="text-center text-gray-400 py-8 text-sm">AI đang tạo bài tập...</div>
+  if (loading) return <div className="text-center text-gray-400 py-8 text-base">AI đang tạo bài tập...</div>
   if (error)   return (
     <div className="text-center space-y-2 py-4">
-      <p className="text-red-500 text-sm">{error}</p>
-      <button onClick={onLoad} className="text-xs text-red-600 underline">Thử lại</button>
+      <p className="text-red-500 text-base">{error}</p>
+      <button onClick={onLoad} className="text-sm text-red-600 underline">Thử lại</button>
     </div>
   )
   if (!exercises) return (
     <div className="text-center py-6">
-      <p className="text-gray-500 text-sm mb-3">Nhấn để AI tạo bài tập luyện tập cho điểm ngữ pháp này</p>
+      <p className="text-gray-500 text-base mb-3">Nhấn để AI tạo bài tập luyện tập cho điểm ngữ pháp này</p>
       <button onClick={onLoad}
-        className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-sm font-semibold transition-colors">
+        className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl text-base font-semibold transition-colors">
         Tạo bài tập ✨
       </button>
     </div>
@@ -106,7 +106,7 @@ function ExercisesPanel({ exercises, loading, error, onLoad }) {
     <div className="space-y-5">
       {exercises.map((ex, i) => <ExerciseQuestion key={i} ex={ex} idx={i} />)}
       <button onClick={onLoad}
-        className="w-full py-2.5 border border-gray-300 text-gray-600 rounded-xl text-sm hover:bg-gray-50 transition-colors">
+        className="w-full py-3 border border-gray-300 text-gray-600 rounded-xl text-base hover:bg-gray-50 transition-colors">
         🔄 Tạo bài tập mới
       </button>
     </div>
@@ -181,12 +181,12 @@ function GrammarCard({ item }) {
         onClick={() => setOpen(o => !o)}
         className="w-full text-left px-5 py-4 flex items-start gap-3 hover:bg-red-50 transition-colors"
       >
-        <span className="mt-0.5 flex-shrink-0 w-7 h-7 rounded-full bg-red-100 text-red-700 text-sm font-bold flex items-center justify-center">
+        <span className="mt-0.5 flex-shrink-0 w-8 h-8 rounded-full bg-red-100 text-red-700 text-sm font-bold flex items-center justify-center">
           {item.stt}
         </span>
         <div className="flex-1 min-w-0">
-          <p className="font-semibold text-gray-800 text-sm leading-snug">{item.pattern}</p>
-          <p className="text-gray-500 text-xs mt-0.5 line-clamp-2">{item.explanation}</p>
+          <p className="font-semibold text-gray-800 text-base leading-snug">{item.pattern}</p>
+          <p className="text-gray-500 text-sm mt-0.5 line-clamp-2">{item.explanation}</p>
         </div>
         <span className="flex-shrink-0 text-gray-400 text-lg">{open ? '▲' : '▼'}</span>
       </button>
@@ -201,7 +201,7 @@ function GrammarCard({ item }) {
               { id: 'exercise', label: '✏️ Bài tập'            },
             ].map(t => (
               <button key={t.id} onClick={() => handleTab(t.id)}
-                className={`flex-1 px-2 py-2.5 text-xs font-semibold transition-colors border-b-2 ${
+                className={`flex-1 px-2 py-3 text-sm font-semibold transition-colors border-b-2 ${
                   tab === t.id
                     ? 'border-red-500 text-red-600 bg-white'
                     : 'border-transparent text-gray-500 hover:text-gray-700'
@@ -217,15 +217,15 @@ function GrammarCard({ item }) {
             {/* Tab: Tổng quan */}
             {tab === 'overview' && (
               <div className="space-y-3">
-                <p className="text-gray-700 text-sm">{item.explanation}</p>
+                <p className="text-gray-700 text-base">{item.explanation}</p>
                 {item.examples.length > 0 && (
                   <div className="space-y-2">
-                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Ví dụ</p>
+                    <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Ví dụ</p>
                     {item.examples.map((ex, i) => (
                       <div key={i} className="bg-gray-50 rounded-lg px-4 py-3 border border-gray-200">
-                        <p className="font-hanzi text-xl text-gray-800">{ex.chinese}</p>
-                        <p className="text-blue-600 text-sm mt-0.5">{ex.pinyin}</p>
-                        <p className="text-gray-600 text-sm mt-0.5">{ex.vietnamese}</p>
+                        <p className="font-hanzi text-2xl text-gray-800">{ex.chinese}</p>
+                        <p className="text-blue-600 text-base mt-0.5">{ex.pinyin}</p>
+                        <p className="text-gray-600 text-base mt-0.5">{ex.vietnamese}</p>
                       </div>
                     ))}
                   </div>
@@ -286,8 +286,8 @@ export default function GrammarPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-6 pb-24">
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">Ngữ pháp</h1>
-      <p className="text-gray-500 text-sm mb-6">Chọn cấp HSK để xem các điểm ngữ pháp</p>
+      <h1 className="text-3xl font-bold text-gray-800 mb-1">Ngữ pháp</h1>
+      <p className="text-gray-500 text-base mb-6">Chọn cấp HSK để xem các điểm ngữ pháp</p>
 
       <div className="flex gap-2 flex-wrap mb-8">
         {[1,2,3,4,5,6].map(lv => (

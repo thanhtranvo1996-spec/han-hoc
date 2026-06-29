@@ -157,29 +157,29 @@ function FreeWriteTab({ level }) {
     <div className="space-y-5">
       {/* Từ cần đặt câu */}
       <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-5 py-5 text-center space-y-2">
-        <p className="text-xs text-gray-400 uppercase tracking-wide">Đặt câu với từ</p>
-        <p className="font-hanzi text-5xl text-gray-800">{word.chinese}</p>
-        <p className="text-red-500">{word.pinyin}</p>
-        <p className="text-gray-500 text-sm">{word.vietnamese}</p>
+        <p className="text-sm text-gray-400 uppercase tracking-wide">Đặt câu với từ</p>
+        <p className="font-hanzi text-6xl text-gray-800">{word.chinese}</p>
+        <p className="text-red-500 text-lg">{word.pinyin}</p>
+        <p className="text-gray-500 text-base">{word.vietnamese}</p>
         <div className="flex justify-center gap-2 pt-1">
           <button onClick={() => setShowExample(v => !v)}
-            className="px-3 py-1.5 text-xs rounded-full border border-gray-300 text-gray-600 hover:border-red-400">
+            className="px-4 py-2 text-sm rounded-full border border-gray-300 text-gray-600 hover:border-red-400">
             {showExample ? 'Ẩn' : 'Xem câu mẫu'}
           </button>
           <button onClick={loadWord}
-            className="px-3 py-1.5 text-xs rounded-full border border-gray-300 text-gray-600 hover:border-red-400">
+            className="px-4 py-2 text-sm rounded-full border border-gray-300 text-gray-600 hover:border-red-400">
             Từ khác
           </button>
         </div>
         {showExample && word.example && (
-          <div className="bg-gray-50 rounded-xl px-4 py-2 space-y-1">
-            <p className="font-hanzi text-base text-gray-600">{word.example}</p>
+          <div className="bg-gray-50 rounded-xl px-4 py-3 space-y-1">
+            <p className="font-hanzi text-lg text-gray-600">{word.example}</p>
             <button
               onClick={() => {
                 const a = new Audio(`${API}/tts?text=${encodeURIComponent(word.example)}&speed=normal`)
                 a.play().catch(() => {})
               }}
-              className="text-xs text-red-500 hover:text-red-700">
+              className="text-sm text-red-500 hover:text-red-700">
               🔊 Nghe câu ví dụ
             </button>
           </div>
@@ -200,7 +200,7 @@ function FreeWriteTab({ level }) {
           <button
             onClick={handleGrade}
             disabled={!sentence.trim() || grading}
-            className={`w-full py-3 rounded-xl font-bold text-sm transition-colors ${
+            className={`w-full py-3.5 rounded-xl font-bold text-base transition-colors ${
               sentence.trim() && !grading
                 ? 'bg-red-600 hover:bg-red-700 text-white'
                 : 'bg-gray-200 text-gray-400 cursor-not-allowed'}`}>
@@ -218,14 +218,14 @@ function FreeWriteTab({ level }) {
           </div>
           <div className="px-5 py-4 divide-y divide-gray-100 space-y-3">
             <div className="pb-3">
-              <p className="text-xs font-semibold text-gray-500 mb-1">Câu bạn viết</p>
-              <p className="font-hanzi text-lg text-gray-700">{sentence}</p>
+              <p className="text-sm font-semibold text-gray-500 mb-1">Câu bạn viết</p>
+              <p className="font-hanzi text-xl text-gray-700">{sentence}</p>
             </div>
             {result.corrected_sentence && (
               <div className="pt-3 pb-3">
-                <p className="text-xs font-semibold text-green-600 mb-1">✅ Câu đúng</p>
+                <p className="text-sm font-semibold text-green-600 mb-1">✅ Câu đúng</p>
                 <div className="flex items-center gap-2">
-                  <p className="font-hanzi text-lg text-green-700 flex-1">{result.corrected_sentence}</p>
+                  <p className="font-hanzi text-xl text-green-700 flex-1">{result.corrected_sentence}</p>
                   <button
                     onClick={() => {
                       const a = new Audio(`${API}/tts?text=${encodeURIComponent(result.corrected_sentence)}&speed=normal`)
@@ -242,7 +242,7 @@ function FreeWriteTab({ level }) {
                 <p className="text-xs font-semibold text-orange-600 mb-2">⚠️ Lỗi cần sửa</p>
                 <ul className="space-y-1">
                   {result.errors.map((e, i) => (
-                    <li key={i} className="text-sm text-gray-600">
+                    <li key={i} className="text-base text-gray-600">
                       <span className="text-red-500">• [{e.type}]</span> {e.description}
                       {e.wrong && <span className="mx-1 text-red-400 line-through">{e.wrong}</span>}
                       {e.correct && <span className="text-green-600">→ {e.correct}</span>}
@@ -253,8 +253,8 @@ function FreeWriteTab({ level }) {
             )}
             {result.feedback && (
               <div className="pt-3 pb-1">
-                <p className="text-sm text-gray-600">💬 {result.feedback}</p>
-                {result.encouragement && <p className="text-sm text-blue-600 mt-1">💪 {result.encouragement}</p>}
+                <p className="text-base text-gray-600">💬 {result.feedback}</p>
+                {result.encouragement && <p className="text-base text-blue-600 mt-1">💪 {result.encouragement}</p>}
               </div>
             )}
           </div>

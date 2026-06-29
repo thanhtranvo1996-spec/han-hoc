@@ -109,7 +109,7 @@ export default function FlashcardPage() {
       {/* ── HEADER ───────────────────────────────── */}
       <div className="mb-6 space-y-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900">Flashcard</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Flashcard</h1>
 
           {/* SRS mode */}
           {dueCount > 0 && (
@@ -134,7 +134,7 @@ export default function FlashcardPage() {
 
         {/* Dropdown HSK */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-500 shrink-0">Cấp HSK:</span>
+          <span className="text-base text-gray-500 shrink-0">Cấp HSK:</span>
           <div className="flex gap-1.5 flex-wrap">
             {Array.from({ length: MAX_LEVEL }, (_, i) => i + 1).map(lv => (
               <button

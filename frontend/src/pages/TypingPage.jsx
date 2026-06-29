@@ -103,9 +103,9 @@ function SentenceCard({ sentence, onNext, onCorrect, onWrong }) {
     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       {/* Vietnamese prompt */}
       <div className="bg-red-50 px-6 py-5 border-b border-red-100">
-        <p className="text-xs text-red-400 font-medium uppercase tracking-wider mb-1">Nghĩa tiếng Việt</p>
-        <p className="text-xl text-gray-800 font-medium leading-relaxed">{sentence.vietnamese}</p>
-        <p className="text-sm text-gray-400 mt-1">{getPinyin(sentence)}</p>
+        <p className="text-sm text-red-400 font-medium uppercase tracking-wider mb-1">Nghĩa tiếng Việt</p>
+        <p className="text-2xl text-gray-800 font-medium leading-relaxed">{sentence.vietnamese}</p>
+        <p className="text-base text-gray-400 mt-1">{getPinyin(sentence)}</p>
       </div>
 
       <div className="px-6 py-5 space-y-5">
@@ -141,7 +141,7 @@ function SentenceCard({ sentence, onNext, onCorrect, onWrong }) {
         {/* Đáp án (khi reveal) */}
         {revealed && (
           <div className="bg-gray-50 rounded-xl px-4 py-3 text-center">
-            <p className="text-xs text-gray-400 mb-1">Đáp án đúng</p>
+            <p className="text-sm text-gray-400 mb-1">Đáp án đúng</p>
             <p className="font-hanzi text-3xl text-gray-800 tracking-widest">{target}</p>
           </div>
         )}
@@ -184,11 +184,11 @@ function SentenceCard({ sentence, onNext, onCorrect, onWrong }) {
               <p className="text-green-700 font-semibold text-center text-lg">✅ Chính xác!</p>
             ) : (
               <div className="space-y-3">
-                <p className="text-red-600 font-semibold text-sm">❌ Chưa đúng — xem chi tiết:</p>
+                <p className="text-red-600 font-semibold text-base">❌ Chưa đúng — xem chi tiết:</p>
                 <div className="pb-6">
                   <DiffResult typed={input.trim()} target={target} />
                 </div>
-                <div className="mt-2 text-xs text-gray-500 flex gap-4 justify-center">
+                <div className="mt-2 text-sm text-gray-500 flex gap-4 justify-center">
                   <span><span className="text-green-600 font-bold">Xanh</span> = đúng</span>
                   <span><span className="text-red-500 font-bold">Đỏ</span> = sai / thừa</span>
                   <span><span className="text-gray-300 font-bold">Mờ</span> = thiếu</span>

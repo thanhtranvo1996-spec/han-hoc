@@ -87,7 +87,7 @@ export default function FlashCard({ word, onKnow, onUnknow }) {
           {/* Nút phát âm */}
           <button
             onClick={handleSpeak}
-            className={`flex items-center gap-2 px-5 py-2 rounded-full border-2 font-medium text-sm transition-all
+            className={`flex items-center gap-2 px-6 py-2.5 rounded-full border-2 font-medium text-base transition-all
               ${playing
                 ? 'border-[#C0392B] bg-[#C0392B] text-white scale-95'
                 : 'border-[#C0392B]/40 text-[#C0392B] hover:bg-[#C0392B]/5 hover:border-[#C0392B]'
@@ -113,23 +113,23 @@ export default function FlashCard({ word, onKnow, onUnknow }) {
           </span>
 
           {/* Chữ Hán nhỏ */}
-          <p className="font-hanzi text-3xl font-bold text-gray-400">
+          <p className="font-hanzi text-4xl font-bold text-gray-400">
             {word.chinese}
           </p>
 
           {/* Pinyin */}
-          <p className="text-[#C0392B] font-semibold text-xl tracking-wide">
+          <p className="text-[#C0392B] font-semibold text-2xl tracking-wide">
             {pinyin}
           </p>
 
           {/* Nghĩa tiếng Việt */}
-          <p className="text-gray-900 font-bold text-2xl text-center leading-snug">
+          <p className="text-gray-900 font-bold text-3xl text-center leading-snug">
             {word.vietnamese}
           </p>
 
           {/* Câu ví dụ */}
           {word.example && (
-            <p className="font-hanzi text-gray-400 text-sm text-center leading-relaxed mt-1">
+            <p className="font-hanzi text-gray-400 text-base text-center leading-relaxed mt-1">
               {word.example}
             </p>
           )}
