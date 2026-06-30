@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { pinyin as toPinyin } from 'pinyin-pro'
 import { API as BASE } from '../api/config'
+import { award } from '../api/gamification'
 
 function getPinyin(sentence) {
   if (sentence.pinyin) return sentence.pinyin
@@ -239,7 +240,11 @@ export default function TypingPage() {
   const advance = useCallback(() => {
     setIdx(i => {
       const next = i + 1
-      if (next >= pool.length) { loadSentences(level); return 0 }
+      if (next >= pool.length) {
+        award('lesson_complete', { type: 'typing', count: pool.length }).catch(() => {})
+        loadSentences(level)
+        return 0
+      }
       return next
     })
   }, [pool.length, level, loadSentences])

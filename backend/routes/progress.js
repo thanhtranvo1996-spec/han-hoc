@@ -1,5 +1,6 @@
 const express = require('express')
 const db      = require('../database/db')
+const { awardXp } = require('../lib/gamification')
 
 const router = express.Router()
 
@@ -19,7 +20,8 @@ router.post('/', (req, res) => {
   if (!word) return res.status(404).json({ error: 'Không tìm thấy từ vựng' })
 
   // Tính SRS (Spaced Repetition)
-  const existing = db.prepare('SELECT interval FROM progress WHERE word_id = ?').get(word_id)
+  const existing = db.prepare('SELECT interval, status FROM progress WHERE word_id = ?').get(word_id)
+  const isNewlyKnown = status === 'known' && existing?.status !== 'known'
   let newInterval
   if (status === 'known') {
     newInterval = Math.min((existing?.interval ?? 1) * 2, 365)
@@ -40,7 +42,13 @@ router.post('/', (req, res) => {
       next_review = excluded.next_review
   `).run(word.hsk_level, word_id, status, newInterval, nextReviewStr)
 
-  res.json({ ok: true, word_id, status })
+  let gamification = null
+  if (isNewlyKnown) {
+    const { amount, stats, newBadges } = awardXp('word_known', { word_id })
+    gamification = { xpGained: amount, totalXp: stats.totalXp, newBadges }
+  }
+
+  res.json({ ok: true, word_id, status, gamification })
 })
 
 // GET /api/progress/:level — lấy tiến độ theo cấp HSK

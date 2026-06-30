@@ -10,6 +10,7 @@ import VocabListPage from './pages/VocabListPage'
 import GrammarPage from './pages/GrammarPage'
 import DashboardPage from './pages/DashboardPage'
 import TypingPage from './pages/TypingPage'
+import { XpToastHost } from './components/XpToast'
 
 // Nút floating: về trang chủ + cuộn lên
 function FloatingNav() {
@@ -65,6 +66,7 @@ function Layout() {
         <Route path="/typing"    element={<TypingPage />} />
       </Routes>
       <FloatingNav />
+      <XpToastHost />
     </>
   )
 }

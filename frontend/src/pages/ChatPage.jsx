@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { API } from '../api/config'
+import { award } from '../api/gamification'
 import WordDetail from '../components/WordDetail'
 
 const TOPICS = [
@@ -259,6 +260,7 @@ export default function ChatPage() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ topic, hsk_level: level, messages, error_count: errorCount }),
       }).catch(() => {})
+      award('chat_session', { topic, message_count: messages.length }).catch(() => {})
     }
     // Reset topic trigger sẽ gọi lại useEffect
     setTopic(t => t) // không đổi topic → dùng trick để re-trigger

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { saveProgress } from '../api/vocabulary'
+import { award } from '../api/gamification'
 import WordDetail from '../components/WordDetail'
 
 import { API as BASE } from '../api/config'
@@ -379,6 +380,8 @@ export default function QuizPage() {
   const handleFinish = (res) => {
     setResult(res)
     setScreen('result')
+    const pct = Math.round((res.score / res.total) * 100)
+    award(pct >= 80 ? 'quiz_great' : 'quiz_complete', { score: pct }).catch(() => {})
   }
 
   const handleRetry = () => {

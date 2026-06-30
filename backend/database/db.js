@@ -75,6 +75,17 @@ db.exec(`
   )
 `)
 
+// Bảng nhật ký XP (gamification: XP, streak, huy hiệu)
+db.exec(`
+  CREATE TABLE IF NOT EXISTS xp_log (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    amount      INTEGER NOT NULL,
+    reason      TEXT    NOT NULL,
+    meta        TEXT    DEFAULT '{}',
+    created_at  TEXT    NOT NULL DEFAULT (datetime('now'))
+  )
+`)
+
 // Thêm cột SRS vào progress nếu chưa có
 const progressCols = db.prepare('PRAGMA table_info(progress)').all().map(c => c.name)
 if (!progressCols.includes('next_review'))  db.exec('ALTER TABLE progress ADD COLUMN next_review TEXT')

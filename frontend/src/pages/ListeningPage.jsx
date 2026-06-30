@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 
 import { API as BASE } from '../api/config'
+import { award } from '../api/gamification'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 let _aud = null
@@ -372,6 +373,10 @@ export default function ListeningPage() {
 
   const addCorrect = useCallback(() => setScore(s => ({ ...s, correct: s.correct + 1 })), [])
   const addWrong   = useCallback(() => setScore(s => ({ ...s, wrong:   s.wrong   + 1 })), [])
+
+  useEffect(() => {
+    if (done) award('lesson_complete', { type: 'listening', completed }).catch(() => {})
+  }, [done])
 
   const handleContinue = () => {
     setDone(false)

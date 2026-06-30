@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import SentenceBuilder from '../components/SentenceBuilder'
 import { API } from '../api/config'
+import { award } from '../api/gamification'
 
 const LIMIT_OPTS = [
   { label: '5 câu',          value: 5   },
@@ -37,6 +38,12 @@ function SentenceOrderTab({ level }) {
   }
 
   const handleNext = () => setIdx(i => i + 1)
+
+  useEffect(() => {
+    if (items.length > 0 && idx >= items.length) {
+      award('lesson_complete', { type: 'sentence_order', count: items.length }).catch(() => {})
+    }
+  }, [idx, items.length])
 
   if (loading) return <div className="text-center text-gray-400 py-20">Đang tải câu...</div>
   if (error)   return <div className="text-red-500 text-sm p-4">{error}</div>
@@ -138,6 +145,9 @@ function FreeWriteTab({ level }) {
           corrected_sentence: data.corrected_sentence,
         }),
       })
+      if (typeof data.score === 'number') {
+        award(data.score >= 9 ? 'writing_great' : 'writing_complete', { score: data.score }).catch(() => {})
+      }
     } catch (e) {
       setResult({ error: e.message })
     }

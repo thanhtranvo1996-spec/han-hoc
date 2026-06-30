@@ -1,6 +1,71 @@
 import { useState, useEffect } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts'
 import { API } from '../api/config'
+import { getSummary } from '../api/gamification'
+
+function LevelPanel({ summary, loading }) {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-2xl border border-gray-200 shadow-sm px-5 py-5">
+        <SkeletonBar />
+      </div>
+    )
+  }
+  if (!summary) return null
+
+  const earnedBadges = summary.badges.filter(b => b.earned)
+  const lockedBadges  = summary.badges.filter(b => !b.earned)
+
+  return (
+    <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl border border-orange-200 shadow-sm px-5 py-5 space-y-5">
+      {/* Level + XP bar */}
+      <div className="flex items-center gap-4">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white font-black text-2xl shrink-0 shadow-md">
+          {summary.level}
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-baseline justify-between mb-1">
+            <p className="font-bold text-gray-800">Cấp {summary.level}</p>
+            <p className="text-xs text-gray-500">{summary.totalXp} XP tổng</p>
+          </div>
+          <div className="h-2.5 bg-white rounded-full overflow-hidden border border-orange-100">
+            <div className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-700"
+              style={{ width: `${summary.levelProgress}%` }} />
+          </div>
+          <p className="text-xs text-gray-400 mt-1">{summary.levelProgress}/100 XP đến cấp tiếp theo</p>
+        </div>
+        <div className="text-center shrink-0 pl-2 border-l border-orange-200">
+          <p className="text-2xl">🔥</p>
+          <p className="text-lg font-black text-orange-600 leading-none">{summary.streak}</p>
+          <p className="text-[10px] text-gray-400">ngày liên tiếp</p>
+        </div>
+      </div>
+
+      {/* Huy hiệu */}
+      <div>
+        <p className="text-sm font-bold text-gray-700 mb-2">
+          🏅 Huy hiệu ({earnedBadges.length}/{summary.badges.length})
+        </p>
+        <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
+          {earnedBadges.map(b => (
+            <div key={b.id} title={b.desc}
+              className="bg-white rounded-xl border-2 border-amber-300 px-2 py-2.5 text-center shadow-sm">
+              <div className="text-xl">{b.icon}</div>
+              <p className="text-[10px] text-gray-700 font-semibold leading-tight mt-0.5 truncate">{b.name}</p>
+            </div>
+          ))}
+          {lockedBadges.map(b => (
+            <div key={b.id} title={b.desc}
+              className="bg-gray-50 rounded-xl border border-gray-200 px-2 py-2.5 text-center opacity-50">
+              <div className="text-xl grayscale">{b.icon}</div>
+              <p className="text-[10px] text-gray-400 leading-tight mt-0.5 truncate">{b.name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function StatCard({ value, label, icon, color = 'text-gray-800' }) {
   return (
@@ -17,8 +82,10 @@ function SkeletonBar() {
 }
 
 export default function DashboardPage() {
-  const [stats,   setStats]   = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [stats,    setStats]    = useState(null)
+  const [loading,  setLoading]  = useState(true)
+  const [summary,  setSummary]  = useState(null)
+  const [gLoading, setGLoading] = useState(true)
 
   useEffect(() => {
     fetch(`${API}/stats/overview`)
@@ -26,6 +93,11 @@ export default function DashboardPage() {
       .then(setStats)
       .catch(() => {})
       .finally(() => setLoading(false))
+
+    getSummary()
+      .then(setSummary)
+      .catch(() => {})
+      .finally(() => setGLoading(false))
   }, [])
 
   const barData = stats?.recent_activity?.map(r => ({
@@ -50,6 +122,9 @@ export default function DashboardPage() {
     <div className="max-w-5xl mx-auto px-4 py-6 pb-24 space-y-8">
       <h1 className="text-2xl font-bold text-gray-800">📊 Tổng quan học tập</h1>
 
+      {/* Khu vực 0 — Cấp độ, XP, Streak, Huy hiệu */}
+      <LevelPanel summary={summary} loading={gLoading} />
+
       {/* Khu vực 1 — 4 stat cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard
@@ -66,7 +141,7 @@ export default function DashboardPage() {
           label="TB đặt câu" />
         <StatCard
           icon="🔥" color="text-orange-500"
-          value={loading ? '…' : `${stats?.study_streak ?? 0} ngày`}
+          value={gLoading ? '…' : `${summary?.streak ?? 0} ngày`}
           label="Streak liên tiếp" />
       </div>
 
